@@ -9,7 +9,7 @@ export default function Home() {
       setLoading(true);
       try {
          const { data: res } = await axios({
-            url: '/research/get',
+            url: "/research/get",
             method: "get",
          });
          setData(res.res);

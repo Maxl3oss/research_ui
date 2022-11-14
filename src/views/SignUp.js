@@ -25,8 +25,14 @@ export default function SignUp() {
       }
    }
    const SignUp = async (e) => {
-      const response = await axios.post("/user/signUp", {
-         email: email,
+      const response = await axios({
+         url: "/user/signUp",
+         method: "post",
+         data: {
+            email: email,
+            fname: fname,
+            lname: lname,
+         },
       }).catch((err) => {
          setErrMsg(err.response.data.message);
       });
