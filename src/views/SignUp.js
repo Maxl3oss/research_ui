@@ -51,7 +51,7 @@ export default function SignUp() {
                      Sign Up
                   </h3>
                   <div>
-                     <label htmlFor="iden" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
+                     <label htmlFor="identification" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
                         Your identification number
                      </label>
                      <input
@@ -61,7 +61,7 @@ export default function SignUp() {
                            setErrMsg("");
                         }}
                         value={iden}
-                        type="number" name="iden" id="iden" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        type="number" name="identification" id="identification" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                      />
                   </div>
                   <div>

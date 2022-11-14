@@ -22,7 +22,6 @@ export default function Home() {
          console.error(err);
       }
       setInterval(() => {
-
          setLoading(false);
       }, 1000);
    }
@@ -91,7 +90,6 @@ export default function Home() {
                                     <div className="text-xs bg-slate-100 p-1 rounded-full text-neutral-500">{moment(item.date, "YYYYMMDD HH:mm:ss").fromNow()}</div>
                                  </div>
                               </div>
-
                               <div className="mt-4 mb-6">
                                  <div className="break-words first-letter:mb-3 text-sm md:text-base font-bold">{item.title.length > 150 ? `${item.title.substring(0, 150)} . . .` : item.title}</div>
                                  <div className="break-words text-sm text-neutral-600">{item.description.length > 250 ? `${item.description.substring(0, 250)} . . .` : item.description}</div>
@@ -105,11 +103,9 @@ export default function Home() {
                                  </div>
                               </div>
                            </div>
-                        ))
-                        }
+                        ))}
                      </>
-                  )
-                  }
+                  )}
                </div>
 
             </div>
