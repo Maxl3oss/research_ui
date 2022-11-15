@@ -5,9 +5,9 @@ import Menubar from 'components/frontend/Menubar';
 
 const Frontend = ({ children }) => {
    return (
-      <div className="flex flex-col h-screen justify-between">
+      <div className="flex flex-col h-screen">
          <Nav />
-         <main>{children}</main>
+         <main className="flex-grow">{children}</main>
          <Menubar />
          <Foot />
       </div>

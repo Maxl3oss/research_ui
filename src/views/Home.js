@@ -2,22 +2,27 @@ import React, { useEffect, useState } from 'react';
 import axios from 'services/AuthService';
 import Layout from 'layouts/FrontendLayout';
 import moment from 'moment';
+import ReactPaginate from 'react-paginate';
 // image
 import Profile from 'images/Profile.jpg';
 
 export default function Home() {
    const [loading, setLoading] = useState(true);
    const [info, setInfo] = useState([]);
+   const [page, setPage] = useState(1);
+   const [perPage, setPerPage] = useState(3);
+   const [totalPage, setTotalPage] = useState("");
 
-   const getAllResearch = async () => {
+   const getResearch = async () => {
       setLoading(true);
       try {
          const res = await axios({
-            url: "/research/get",
+            url: `/research/get?page=${page}&per_page=${perPage}`,
             method: "get",
          });
          setInfo(res.data.data);
-         // console.log(res.data.data);
+         setTotalPage(res.data.total_pages);
+         // console.log(res.data.total_pages);
       } catch (err) {
          console.error(err);
       }
@@ -26,10 +31,18 @@ export default function Home() {
       }, 1000);
    }
 
+   const handlePageClick = (event) => {
+
+      setPage(event.selected + 1);
+   };
+
+   useEffect(() => {
+      getResearch();
+   }, [page, perPage]);
+
    useEffect(() => {
       window.scrollTo(0, 0);
-      getAllResearch();
-   }, []);
+   });
 
    return (
       <Layout>
@@ -82,6 +95,22 @@ export default function Home() {
                            </div>
                         ))}
                      </>
+                  )}
+                  {totalPage && (
+                     <ReactPaginate
+                        className="mt-5 flex justify-center items-center list-none mb-20 gap-1"
+                        breakLabel="..."
+                        nextLabel="next >"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={page}
+                        pageCount={totalPage}
+                        previousLabel="< previous"
+                        renderOnZeroPageCount={null}
+                        pageLinkClassName="page-num"
+                        previousClassName="page-num"
+                        nextLinkClassName="page-num"
+                        activeClassName="active"
+                     />
                   )}
                </div>
 

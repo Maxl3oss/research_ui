@@ -24,3 +24,16 @@ input[type=number] {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.page-num{
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-weight: 400;
+  background: rgb(224 231 255);
+}
+
+.page-num:hover{
+  background: rgb(165 180 252);
+}

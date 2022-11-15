@@ -55,7 +55,7 @@ export default function SignIn() {
                            setEmail(e.target.value);
                            setErrMsg("");
                         }}
-                        type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500  focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name123@company.com"
+                        type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name123@company.com"
                      />
                   </div>
                   <div>
@@ -68,7 +68,7 @@ export default function SignIn() {
                            setPass(e.target.value);
                            setErrMsg("");
                         }}
-                        type="password" name="password" id="password" placeholder="• • • • • • • •" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        type="password" name="password" id="password" placeholder="• • • • • • • •" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                      />
                   </div>
                   {errMsg !== "" && (
@@ -100,7 +100,7 @@ export default function SignIn() {
                         Lost Password?
                      </span>
                   </div>
-                  <button type="submit" onClick={onSubmit} className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign In to your account</button>
+                  <button type="submit" onClick={onSubmit} className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign In to your account</button>
                   <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                      Not registered?
                      <Link to="/signUp" className="text-blue-700 hover:underline dark:text-blue-500">Create
