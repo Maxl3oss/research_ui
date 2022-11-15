@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import axios from 'services/AuthService';
+import Swal from 'sweetalert2';
 
 export default function SignUp() {
    const navigate = useNavigate();
    const userRef = useRef();
-   const [iden, setIden] = useState("");
    const [email, setEmail] = useState("");
+   const [pass, setPass] = useState("");
+   const [conPass, setConPass] = useState("");
    const [fname, setFname] = useState("");
    const [lname, setLname] = useState("");
    const [errMsg, setErrMsg] = useState("");
@@ -17,10 +19,11 @@ export default function SignUp() {
 
    const onSubmit = async (e) => {
       e.preventDefault();
-      if (email === "" || fname === "" || lname === "" || iden === "") {
+      if (email === "" || fname === "" || lname === "" || pass === "" || conPass === "") {
          setErrMsg("Please complete this form.");
-      }
-      else {
+      } else if (pass !== conPass) {
+         setErrMsg("Passwords do not match.")
+      } else {
          SignUp();
       }
    }
@@ -30,14 +33,26 @@ export default function SignUp() {
          method: "post",
          data: {
             email: email,
+            pass: pass,
             fname: fname,
             lname: lname,
          },
       }).catch((err) => {
-         setErrMsg(err.response.data.message);
+         if (err.response.data.message.code === "ER_DUP_ENTRY") {
+            setErrMsg("This email already exists.");
+         }
+         // console.log(err);
+         // setErrMsg(err.response.data.message);
       });
       if (response?.status === 200) {
-         navigate("/");
+         Swal.fire({
+            icon: 'success',
+            title: 'Sign Up Success',
+            text: 'Please check your email!',
+            footer: '<a href="https://mail.google.com/mail">go to google mail?</a>'
+         }).then(() => {
+            navigate("/signIn");
+         })
       }
    }
 
@@ -50,49 +65,37 @@ export default function SignUp() {
                   <h3 className="text-xl font-medium text-center text-gray-900 dark:text-white">
                      Sign Up
                   </h3>
-                  <div>
-                     <label htmlFor="identification" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
-                        Your identification number
-                     </label>
-                     <input
-                        ref={userRef}
-                        onChange={(e) => {
-                           setIden(e.target.value);
-                           setErrMsg("");
-                        }}
-                        value={iden}
-                        type="number" name="identification" id="identification" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                     />
-                  </div>
-                  <div>
-                     <label htmlFor="fname" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
-                        Your first name
-                     </label>
-                     <input
-                        ref={userRef}
-                        onChange={(e) => {
-                           setFname(e.target.value);
-                           setErrMsg("");
-                        }}
-                        type="text" name="fname" id="fname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                     />
-                  </div>
-                  <div>
-                     <label htmlFor="lname" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
-                        Your last name
-                     </label>
-                     <input
-                        ref={userRef}
-                        onChange={(e) => {
-                           setLname(e.target.value);
-                           setErrMsg("");
-                        }}
-                        type="text" name="lname" id="lname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                     />
+                  <div className="flex">
+                     <div className="mr-1">
+                        <label htmlFor="fname" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
+                           First name
+                        </label>
+                        <input
+                           ref={userRef}
+                           onChange={(e) => {
+                              setFname(e.target.value);
+                              setErrMsg("");
+                           }}
+                           type="text" name="fname" id="fname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        />
+                     </div>
+                     <div className="ml-1">
+                        <label htmlFor="lname" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
+                           Last name
+                        </label>
+                        <input
+                           ref={userRef}
+                           onChange={(e) => {
+                              setLname(e.target.value);
+                              setErrMsg("");
+                           }}
+                           type="text" name="lname" id="lname" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        />
+                     </div>
                   </div>
                   <div>
                      <label htmlFor="email" className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
-                        Your email
+                        Email
                      </label>
                      <input
                         ref={userRef}
@@ -100,10 +103,35 @@ export default function SignUp() {
                            setEmail(e.target.value);
                            setErrMsg("");
                         }}
-                        type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name123@company.com"
+                        type="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40  block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name123@company.com"
                      />
                   </div>
-
+                  <div>
+                     <label className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
+                        Passwords
+                     </label>
+                     <input
+                        ref={userRef}
+                        onChange={(e) => {
+                           setPass(e.target.value);
+                           setErrMsg("");
+                        }}
+                        type="password" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                     />
+                  </div>
+                  <div>
+                     <label className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
+                        Confirm passwords
+                     </label>
+                     <input
+                        ref={userRef}
+                        onChange={(e) => {
+                           setConPass(e.target.value);
+                           setErrMsg("");
+                        }}
+                        type="password" name="conPass" id="conPass" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                     />
+                  </div>
                   {errMsg !== "" && (
                      <>
                         <div className="flex mt-2">

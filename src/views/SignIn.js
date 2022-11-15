@@ -22,16 +22,18 @@ export default function SignIn() {
          SignIn();
       }
    }
-   const SignIn = async (e) => {
-      const response = await axios.post("/user/signIn", {
+   const SignIn = async () => {
+      await axios.post("/user/signIn", {
          email: email,
          pass: pass,
+      }).then((res) => {
+         console.log(res);
+         if (res?.status === 200) {
+            navigate("/");
+         }
       }).catch((err) => {
          setErrMsg(err.response.data.message);
       });
-      if (response?.status === 200) {
-         navigate("/");
-      }
    }
 
    return (
