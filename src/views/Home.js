@@ -1,53 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'services/AuthService';
 import Layout from 'layouts/FrontendLayout';
 import moment from 'moment';
 import ReactPaginate from 'react-paginate';
 // image
 import Profile from 'images/Profile.jpg';
+// context 
+import { SearchContext } from 'App';
 
 export default function Home() {
+   const context = useContext(SearchContext);
    const [loading, setLoading] = useState(true);
    const [info, setInfo] = useState([]);
    const [page, setPage] = useState(1);
-   const [perPage, setPerPage] = useState(3);
+   const [perPage] = useState(3);
    const [totalPage, setTotalPage] = useState("");
 
-   const getResearch = async () => {
-      setLoading(true);
-      try {
-         const res = await axios({
-            url: `/research/get?page=${page}&per_page=${perPage}`,
-            method: "get",
-         });
-         setInfo(res.data.data);
-         setTotalPage(res.data.total_pages);
-         // console.log(res.data.total_pages);
-      } catch (err) {
-         console.error(err);
-      }
-      setInterval(() => {
-         setLoading(false);
-      }, 1000);
-   }
-
    const handlePageClick = (event) => {
-
       setPage(event.selected + 1);
    };
 
    useEffect(() => {
+      const getResearch = async () => {
+         setLoading(true);
+         try {
+            const res = await axios({
+               url: `/research/get?page=${page}&per_page=${perPage}&type=${context.type}&search=${context.search}`,
+               method: "get",
+            });
+            setInfo(res.data.data);
+            setTotalPage(res.data.total_pages);
+            // console.log(res.data.data);
+         } catch (err) {
+            console.error(err);
+         }
+         setLoading(false);
+      }
       getResearch();
-   }, [page, perPage]);
+   }, [page, perPage, context.type, context.search]);
 
    useEffect(() => {
       window.scrollTo(0, 0);
-   });
+   }, []);
+
+   useEffect(() => {
+      console.log("Home -> " + context.search);
+   }, [context.search]);
 
    return (
       <Layout>
          <div className={`${loading && "h-screen"}`}>
-            <div className="md:flex-row flex flex-col w-full mb-10">
+            <div className="md:flex-row flex flex-col w-full">
 
                {/* <div className="w-1/3 justify-center md:flex hidden">
                   <div>gg</div>
@@ -69,48 +72,56 @@ export default function Home() {
                      <>
                         {info.map((item, key) => (
                            <div key={key} className="rounded-xl w-full md:w-11/12 border p-5 md:shadow-lg mx-4 bg-white">
-                              <div className="flex  items-center justify-between border-b pb-3">
+                              <div className="flex items-center justify-between border-b pb-3">
                                  <div className="flex items-center space-x-3">
                                     <div className="h-8 w-8 rounded-full bg-slate-400 ">
                                        <img alt="" src={Profile} />
                                     </div>
-                                    <div className="text-sm md:text-lg font-bold text-slate-700">{item.creator}</div>
+                                    <div className="text-sm md:text-lg text-slate-700">{item.creator}</div>
                                  </div>
                                  <div className="flex items-center space-x-8">
                                     <div className="text-xs bg-slate-100 p-1 rounded-full text-neutral-500">{moment(item.date, "YYYYMMDD HH:mm:ss").fromNow()}</div>
                                  </div>
                               </div>
                               <div className="mt-4 mb-6">
-                                 <div className="break-words first-letter:mb-3 text-sm md:text-base font-bold">{item.title.length > 150 ? `${item.title.substring(0, 150)} . . .` : item.title}</div>
+                                 <div className="break-words first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">{item.title.length > 150 ? `${item.title.substring(0, 150)} . . .` : item.title}</div>
                                  <div className="break-words text-sm text-neutral-600">{item.description.length > 250 ? `${item.description.substring(0, 250)} . . .` : item.description}</div>
-                                 <div className="break-words text-sm  underline">Institute : {item.rights}</div>
+                                 <div className="break-words text-sm font-medium underline">Institute : {item.rights}</div>
                               </div>
                               <div>
                                  <div className="flex items-center justify-between text-slate-500">
                                     <div className="flex space-x-4 md:space-x-8">
-                                       <div className="text-xs md:text-sm bg-indigo-100 p-2 rounded-full">รายละเอียด </div>
+                                       <div className="text-xs md:text-sm bg-indigo-100 p-2 rounded-full">รายละเอียด</div>
                                     </div>
                                  </div>
                               </div>
                            </div>
                         ))}
+                        {/* if no data  */}
+                        {info.length === 0 && (
+                           <div>
+                              No results match that query
+                           </div>
+                        )}
                      </>
                   )}
                   {totalPage && (
-                     <ReactPaginate
-                        className="mt-5 flex justify-center items-center list-none mb-20 gap-1"
-                        breakLabel="..."
-                        nextLabel="next >"
-                        onPageChange={handlePageClick}
-                        pageRangeDisplayed={page}
-                        pageCount={totalPage}
-                        previousLabel="< previous"
-                        renderOnZeroPageCount={null}
-                        pageLinkClassName="page-num"
-                        previousClassName="page-num"
-                        nextLinkClassName="page-num"
-                        activeClassName="active"
-                     />
+                     <div className={`${loading && "invisible"}`}>
+                        <ReactPaginate
+                           className="mt-5 flex justify-center items-center list-none mb-20 md:mb-0  gap-1"
+                           breakLabel="..."
+                           nextLabel="->"
+                           onPageChange={handlePageClick}
+                           pageRangeDisplayed={page}
+                           pageCount={totalPage}
+                           previousLabel="<-"
+                           renderOnZeroPageCount={null}
+                           pageLinkClassName="page-num"
+                           previousClassName="page-num"
+                           nextLinkClassName="page-num"
+                           activeClassName="active"
+                        />
+                     </div>
                   )}
                </div>
 

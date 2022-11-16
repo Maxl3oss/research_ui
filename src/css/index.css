@@ -1,16 +1,19 @@
-/* body {
+body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  /* font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-family: 'Roboto', sans-serif; */
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; */
 }
 
-code {
+/* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } */
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
@@ -27,13 +30,15 @@ input[type=number] {
 
 
 .page-num{
-  padding: 15px;
+  padding: 5px 10px 5px 10px;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 5px;
   font-weight: 400;
-  background: rgb(224 231 255);
+} 
+.active a {
+  color: #fff;
+  background: rgb(63, 63, 63);
 }
-
 .page-num:hover{
-  background: rgb(165 180 252);
+  background: rgb(200, 200, 200);
 }
