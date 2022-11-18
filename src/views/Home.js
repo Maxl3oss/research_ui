@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import axios from 'services/AuthService';
+import axios from 'services/axios';
 import Layout from 'layouts/FrontendLayout';
 import moment from 'moment';
 import ReactPaginate from 'react-paginate';
@@ -13,7 +13,7 @@ export default function Home() {
    const [loading, setLoading] = useState(true);
    const [info, setInfo] = useState([]);
    const [page, setPage] = useState(1);
-   const [perPage] = useState(3);
+   const [perPage] = useState(10);
    const [totalPage, setTotalPage] = useState("");
 
    const handlePageClick = (event) => {
@@ -22,6 +22,7 @@ export default function Home() {
 
    useEffect(() => {
       const getResearch = async () => {
+         if (context.search && context.type) setPage(1);
          setLoading(true);
          try {
             const res = await axios({
@@ -30,7 +31,7 @@ export default function Home() {
             });
             setInfo(res.data.data);
             setTotalPage(res.data.total_pages);
-            // console.log(res.data.data);
+            // console.log(res.data);
          } catch (err) {
             console.error(err);
          }
@@ -42,10 +43,6 @@ export default function Home() {
    useEffect(() => {
       window.scrollTo(0, 0);
    }, []);
-
-   useEffect(() => {
-      console.log("Home -> " + context.search);
-   }, [context.search]);
 
    return (
       <Layout>
@@ -99,7 +96,7 @@ export default function Home() {
                         ))}
                         {/* if no data  */}
                         {info.length === 0 && (
-                           <div>
+                           <div className="mt-4">
                               No results match that query
                            </div>
                         )}

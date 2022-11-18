@@ -14,11 +14,9 @@ function App() {
   const [type, setType] = useState("all");
 
   const updateSearch = (str) => {
-    console.log("App -> " + str);
     setSearch(str);
   }
   const updateType = (type) => {
-    console.log("App -> " + type);
     setType(type);
   }
 
@@ -32,8 +30,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="signIn" element={<SignIn />} />
-          <Route path="signUp" element={<SignUp />} />
+          <Route path="/signIn" element={<SignIn />} />
+          <Route path="/signUp" element={<SignUp />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>

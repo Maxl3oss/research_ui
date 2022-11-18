@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from "react-router-dom";
-import axios from 'services/AuthService';
+import axios from 'services/axios';
 
 export default function SignIn() {
    const navigate = useNavigate();
@@ -22,13 +22,15 @@ export default function SignIn() {
          SignIn();
       }
    }
+
    const SignIn = async () => {
       await axios.post("/user/signIn", {
          email: email,
          pass: pass,
       }).then((res) => {
-         console.log(res);
          if (res?.status === 200) {
+            localStorage.setItem('user', JSON.stringify(res.data.data[0]));
+            localStorage.setItem('token', JSON.stringify(res.data.token))
             navigate("/");
          }
       }).catch((err) => {
