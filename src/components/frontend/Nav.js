@@ -1,16 +1,16 @@
-import { SearchContext } from 'App';
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import { SearchContext } from 'context/SearchProvider';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default function Nav() {
    const navigate = useNavigate();
-   const userRef = useRef();
    const typeFilter = ['all', 'title', 'creator', 'subject', 'institute'];
    const [popOverShow, setPopOverShow] = useState(false);
    const context = useContext(SearchContext);
    let { user_email } = {};
+
    localStorage.getItem("user") ? { user_email } = JSON.parse(localStorage.getItem("user")) : { user_email } = false;
 
    const popOverFn = () => {
@@ -30,23 +30,23 @@ export default function Nav() {
    }
 
    const signOut = async () => {
-      localStorage.clear();
-      await axios({
-         method: "post",
-         url: "/api/user/signOut",
-      }).then(() => {
-         Swal.fire({
-            icon: 'success',
-            title: 'Successfully sign out.',
+      try {
+         await axios({
+            method: "post",
+            url: "/api/user/signOut",
          }).then(() => {
-            navigate("/signIn");
+            Swal.fire({
+               icon: 'success',
+               title: 'Successfully sign out.',
+            }).then(() => {
+               localStorage.clear();
+               navigate("/signIn");
+            });
          });
-      });
+      } catch (err) {
+         console.log(err);
+      }
    }
-
-   useEffect(() => {
-      userRef.current.focus();
-   }, []);
 
    useEffect(() => {
       if (context.type === "" && context.search !== "") {
@@ -64,7 +64,7 @@ export default function Nav() {
          {/* props */}
          <div className="container flex items-center justify-around mx-auto">
             {/* logo */}
-            <div className="flex justify-start">
+            <div onClick={() => navigate("/")} className="flex justify-start cursor-pointer">
                <img src="https://flowbite.com/docs/images/logo.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
                <span className="self-center md:text-xl font-semibold whitespace-nowrap dark:text-white">
                   Research
@@ -91,10 +91,10 @@ export default function Nav() {
                   <input
                      type="text"
                      className="ml-3 w-full border-none focus:border-white focus:outline-none focus:ring focus:ring-white"
-                     ref={userRef}
                      onChange={(e) => (
                         context.updateSearch(e.target.value)
                      )}
+                     value={context.search}
                      placeholder="Search ..."
                   />
                   <button onClick={popOverFn}>

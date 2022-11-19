@@ -65,7 +65,6 @@ export default function SignIn() {
                         Your password
                      </label>
                      <input
-                        ref={userRef}
                         onChange={(e) => {
                            setPass(e.target.value);
                            setErrMsg("");
