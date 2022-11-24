@@ -34,17 +34,37 @@ export default function Nav() {
          await axios({
             method: "post",
             url: "/api/user/signOut",
-         }).then(() => {
+         }).then((res) => {
             Swal.fire({
                icon: 'success',
                title: 'Successfully sign out.',
+               confirmButtonColor: "rgb(29 78 216)",
             }).then(() => {
                localStorage.clear();
                navigate("/signIn");
             });
          });
       } catch (err) {
-         console.log(err);
+         // console.log(err.response?.status === 403);
+         if (err.response?.status === 403) {
+            Swal.fire({
+               icon: 'warning',
+               title: 'Token time out!',
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.clear();
+               navigate("/signIn");
+            });
+         } else if (err.response?.status === 401) {
+            Swal.fire({
+               icon: 'warning',
+               title: 'Token not found',
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.clear();
+               navigate("/signIn");
+            });
+         }
       }
    }
 

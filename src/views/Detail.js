@@ -28,7 +28,7 @@ const Detail = () => {
                   method: "get",
                   url: `/research/get/${id}`,
                });
-               console.log(res.data.data);
+               // console.log(res.data.data);
                setItems(res.data.data)
             } catch (err) {
                console.log(err);
@@ -44,8 +44,8 @@ const Detail = () => {
 
    return (
       <Layout>
-         <div className="h-screen bg-slate-200  flex justify-center items-start">
-            <div className="mt-1 md:mt-5 md:w-8/12 w-full bg-white  rounded-xl p-4">
+         <div className="min-h-screen bg-slate-200  flex justify-center items-start">
+            <div className="mt-1 mb-1 md:mb-5 md:mt-5 md:w-8/12 w-full bg-white  rounded-xl p-4">
                {items.map((item, key) => (
                   <div key={key}>
 
