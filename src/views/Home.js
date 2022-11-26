@@ -5,6 +5,7 @@ import moment from "moment";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
 // image
+import noImage from "images/NoImage.gif";
 import Profile from "images/Profile.jpg";
 // context
 import { SearchContext } from "context/SearchProvider";
@@ -19,6 +20,7 @@ export default function Home() {
    const [totalPage, setTotalPage] = useState("");
 
    const handlePageClick = (event) => {
+      window.scroll(0, 0);
       setPage(event.selected + 1);
    };
 
@@ -91,11 +93,11 @@ export default function Home() {
                         {items.map((item, key) => (
                            <div
                               key={key}
-                              className="rounded-xl w-full md:w-11/12 border p-5 md:shadow-lg mx-4 bg-white"
+                              className="rounded-xl w-full md:w-11/12 border p-5 pb-0 md:shadow-lg mx-4 bg-white"
                            >
                               <div className="flex items-center justify-between border-b pb-3">
                                  <div className="flex items-center space-x-3">
-                                    <div className="h-8 w-8 rounded-full bg-slate-400 ">
+                                    <div className="h-10 w-10 rounded-full bg-slate-400 ">
                                        <img alt="" src={Profile} />
                                     </div>
                                     <div className="text-sm md:text-lg text-slate-700">
@@ -108,31 +110,39 @@ export default function Home() {
                                     </div>
                                  </div>
                               </div>
-                              <div className="mt-4 mb-6">
-                                 <div className="break-words first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">
-                                    {item.title.length > 150
-                                       ? `${item.title.substring(0, 150)} . . .`
-                                       : item.title}
+                              {/* block research ================================================================================ */}
+                              <div className="md:flex mt-4 mb-6 ">
+                                 <div className="md:w-2/6 flex justify-center items-center">
+                                    <img alt="" className="h-auto max-h-screen" src={item.image ? item.image : noImage} />
                                  </div>
-                                 <div className="break-words text-sm text-neutral-600">
-                                    {item.description.length > 250
-                                       ? `${item.description.substring(0, 250)} . . .`
-                                       : item.description}
-                                 </div>
-                                 <div className="break-words text-sm font-medium underline">
-                                    Institute : {item.rights}
-                                 </div>
-                              </div>
-                              <div>
-                                 <div className="flex items-center justify-between text-slate-500">
-                                    <div className="flex space-x-4 md:space-x-8">
-                                       <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 p-2 rounded-full">
-                                          รายละเอียด
-                                       </button>
+                                 <div className="w-full md:ml-3">
+                                    <div className="break-words first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">
+                                       {item.title.length > 150
+                                          ? `${item.title.substring(0, 150)} . . .`
+                                          : item.title}
+                                    </div>
+                                    <div className="break-words text-sm text-neutral-600">
+                                       {item.description.length > 500
+                                          ? `${item.description.substring(0, 500)} . . .`
+                                          : item.description}
+                                    </div>
+                                    <div className="break-words text-sm font-medium underline">
+                                       Institute : {item.rights}
+                                    </div>
+
+                                    <div className="mt-5 flex items-end">
+                                       <div className="flex items-center justify-between text-slate-500">
+                                          <div className="flex space-x-4 md:space-x-8">
+                                             <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 p-2 rounded-full">
+                                                รายละเอียด
+                                             </button>
+                                          </div>
+                                       </div>
                                     </div>
                                  </div>
                               </div>
                            </div>
+
                         ))}
                         {/* if no data  */}
                         {items.length === 0 && (

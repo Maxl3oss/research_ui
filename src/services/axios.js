@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "http://192.168.211.103:3000/api/";
+const BASE_URL = "http://192.168.229.103:3000/api/";
 
 const authService = axios.create({
     baseURL: BASE_URL,

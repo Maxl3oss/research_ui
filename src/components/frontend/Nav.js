@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 export default function Nav() {
    const navigate = useNavigate();
-   const typeFilter = ['all', 'title', 'creator', 'subject', 'institute'];
+   const typeFilter = ['all', 'creator', 'title', 'description', 'subject', 'rights'];
    const [popOverShow, setPopOverShow] = useState(false);
    const context = useContext(SearchContext);
    let { user_email } = {};
