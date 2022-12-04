@@ -89,11 +89,12 @@ export default function Home() {
                      </div>
                   )}
                   {!loading && (
-                     <>
+                     <div className="md:pr-10">
+
                         {items.map((item, key) => (
                            <div
                               key={key}
-                              className="rounded-xl w-full md:w-11/12 border p-5 pb-0 md:shadow-lg mx-4 bg-white"
+                              className="rounded-xl w-full border p-5 pb-0 md:shadow-lg md:mx-4 bg-white"
                            >
                               <div className="flex items-center justify-between border-b pb-3">
                                  <div className="flex items-center space-x-3">
@@ -146,9 +147,9 @@ export default function Home() {
                         ))}
                         {/* if no data  */}
                         {items.length === 0 && (
-                           <div className="mt-4">No results match that query</div>
+                           <div className="mt-4 h-screen">No results match that query</div>
                         )}
-                     </>
+                     </div>
                   )}
                   {totalPage && (
                      <div className={`${loading && "invisible"}`}>

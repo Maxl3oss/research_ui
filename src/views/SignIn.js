@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import axios from 'services/axios';
+import Swal from "sweetalert2";
 
 export default function SignIn() {
    const navigate = useNavigate();
    const userRef = useRef();
    const [email, setEmail] = useState("");
+   const [remember, setRemember] = useState();
    const [pass, setPass] = useState("");
    const [errMsg, setErrMsg] = useState("");
-
-   useEffect(() => {
-      userRef.current.focus();
-   }, []);
 
    const onSubmit = async (e) => {
       e.preventDefault();
@@ -30,13 +28,39 @@ export default function SignIn() {
       }).then((res) => {
          if (res?.status === 200) {
             localStorage.setItem('user', JSON.stringify(res.data.data[0]));
-            localStorage.setItem('token', JSON.stringify(res.data.token))
+            localStorage.setItem('token', JSON.stringify(res.data.token));
+            Swal.fire({
+               position: 'center',
+               icon: 'success',
+               text: 'Successfully sign in.',
+               showConfirmButton: false,
+               timer: 1000
+            });
+            onClickRemember();
+            if (remember) localStorage.setItem('remember', JSON.stringify({ email: email, pass: pass, remember: true }));
             navigate("/");
          }
       }).catch((err) => {
          setErrMsg(err.response.data.message);
       });
    }
+
+   const onClickRemember = () => {
+      remember ? setRemember(false) : setRemember(true);
+   }
+
+   useEffect(() => {
+      userRef.current.focus();
+   }, []);
+
+   useEffect(() => {
+      if (localStorage.getItem('remember')) {
+         let data = JSON.parse(localStorage.getItem('remember'));
+         setEmail(data.email);
+         setPass(data.pass);
+         setRemember(data.remember);
+      }
+   }, []);
 
    return (
       <div className="flex h-screen bg-slate-300">
@@ -53,6 +77,7 @@ export default function SignIn() {
                      </label>
                      <input
                         ref={userRef}
+                        value={email}
                         onChange={(e) => {
                            setEmail(e.target.value);
                            setErrMsg("");
@@ -69,6 +94,7 @@ export default function SignIn() {
                            setPass(e.target.value);
                            setErrMsg("");
                         }}
+                        value={pass}
                         type="password" name="password" id="password" placeholder="• • • • • • • •" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                      />
                   </div>
@@ -89,7 +115,10 @@ export default function SignIn() {
                   <div className="flex items-start">
                      <div className="flex items-start">
                         <div className="flex items-center h-5">
-                           <input id="remember" aria-describedby="remember" type="checkbox" className="bg-gray-50 border border-gray-300 focus:ring-3 focus:ring-blue-300 h-4 w-4 rounded dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required="" />
+                           <input id="remember" type="checkbox" className="bg-gray-50 border border-gray-300 focus:ring-3 focus:ring-blue-300 h-4 w-4 rounded dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required=""
+                              defaultChecked={remember}
+                              onClick={onClickRemember}
+                           />
                         </div>
                         <div className="text-sm ml-3">
                            <label htmlFor="remember" className="font-medium text-gray-900 dark:text-gray-300">

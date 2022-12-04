@@ -33,14 +33,17 @@ export default function Nav() {
       try {
          await axios({
             method: "post",
+            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
             url: "/api/user/signOut",
          }).then((res) => {
             Swal.fire({
                icon: 'success',
-               title: 'Successfully sign out.',
-               confirmButtonColor: "rgb(29 78 216)",
+               text: 'Successfully sign out.',
+               showConfirmButton: false,
+               timer: 1000
             }).then(() => {
-               localStorage.clear();
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
                navigate("/signIn");
             });
          });
@@ -49,19 +52,21 @@ export default function Nav() {
          if (err.response?.status === 403) {
             Swal.fire({
                icon: 'warning',
-               title: 'Token time out!',
+               text: 'Token time out!',
                confirmButtonColor: "rgb(29 78 216)",
             }).then(() => {
-               localStorage.clear();
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
                navigate("/signIn");
             });
          } else if (err.response?.status === 401) {
             Swal.fire({
                icon: 'warning',
-               title: 'Token not found',
+               text: 'Token not found',
                confirmButtonColor: "rgb(29 78 216)",
             }).then(() => {
-               localStorage.clear();
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
                navigate("/signIn");
             });
          }
@@ -72,7 +77,7 @@ export default function Nav() {
       if (context.type === "" && context.search !== "") {
          Swal.fire({
             icon: 'warning',
-            title: 'Please select a category to search!',
+            text: 'Please select a category to search!',
          }).then(() => {
             setPopOverShow(true);
          })
@@ -80,7 +85,7 @@ export default function Nav() {
    }, [context.type, context.search]);
 
    return (
-      <nav className="sticky top-0 bg-white border-gray-200 shadow px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+      <nav className="fixed inset-x-0 top-0 bg-white border-gray-200 shadow px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
          {/* props */}
          <div className="container flex items-center justify-around mx-auto">
             {/* logo */}
@@ -91,7 +96,7 @@ export default function Nav() {
                </span>
             </div>
             {/* search bar */}
-            <div className="flex flex-col w-3/5 md:w-3/5">
+            <div className="flex flex-col w-3/5 md:w-3/5 focus:w-full">
                <div className="flex items-center w-full bg-white border rounded-full pr-3 py-1">
                   {/* type filter */}
                   {context.type && (
@@ -136,6 +141,9 @@ export default function Nav() {
                                  </button>
                               </div>
                            ))}
+                           <button onClick={signOut} className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-red-600 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                              Sign Out
+                           </button>
                         </div>
                      </div>
                   </div>
@@ -143,21 +151,25 @@ export default function Nav() {
             </div>
             <div className="hidden w-full md:block md:w-auto " id="navbar-default">
                <ul className="flex flex-col justify-around p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                  <li>
-                     <Link className="h-8 w-8 md:hover:text-blue-600" to="/" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                        </svg>
-                     </Link>
-                  </li>
+
                   <li className={!user_email ? "hidden" : ""}>
-                     <button onClick={signOut} className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-red-600 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        Sign Out
+                     <button onClick={signOut} className="ml-2 flex justify-center items-center py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-red-600 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                        </svg>
+                        <span className="ml-2">Sign Out</span>
                      </button>
                   </li>
+
                   <li className={user_email ? "hidden" : ""}>
-                     <Link to="/signIn" className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        Sign In
+
+                     <Link to="/signIn" className="ml-2 block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                        <div className="flex hover:text-blue-800">
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                           </svg>
+                           <span className="ml-2">Sign In</span>
+                        </div>
                      </Link>
                   </li>
                </ul>

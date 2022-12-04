@@ -4,6 +4,7 @@ import Layout from "layouts/FrontendLayout";
 import { useNavigate } from "react-router-dom";
 import axios from "services/axios";
 import moment from "moment";
+import Swal from "sweetalert2";
 // image
 import noImage from "images/NoImage.gif";
 
@@ -45,17 +46,16 @@ const Detail = () => {
    }, [])
 
    const onClickFileDownload = async (fileID, fileName) => {
-      console.log("Click ", fileID);
+      // console.log("Click ", fileID);
       try {
          await axios({
             method: "get",
+            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
             url: `research/file/${fileID}/download`,
             responseType: "blob"
          }).then((res) => {
-            console.log(res.data);
-            // const fileUrl = URL.createObjectURL(res.data);
-            // const w = window.open(fileUrl, '_blank');
-            // w && w.focus();
+            // console.log(res.data);
+            // download file pdf
             const blob = new Blob([res.data], { type: 'application/pdf' });
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
@@ -64,16 +64,44 @@ const Detail = () => {
          });
          // console.log(res.data.data);
       } catch (err) {
-         alert(err);
-
-         console.log(err);
+         if (err.response?.status === 403) {
+            Swal.fire({
+               icon: 'warning',
+               text: 'Token time out!',
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
+               navigate("/signIn");
+            });
+         } else if (err.response?.status === 401) {
+            Swal.fire({
+               icon: 'warning',
+               text: 'Token not found!',
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
+               navigate("/signIn");
+            });
+         } else if (!localStorage.getItem('token')) {
+            Swal.fire({
+               icon: 'warning',
+               text: 'Please sign in!',
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
+               navigate("/signIn");
+            });
+         }
       }
    }
 
    return (
       <Layout>
-         <div className="min-h-screen bg-slate-200  flex justify-center items-start">
-            <div className="mt-1 mb-20 md:mb-5 md:mt-5 md:w-8/12 w-full bg-white  rounded-xl p-4">
+         <div className="min-h-screen md:pt-5 md:px-5 bg-slate-200  flex justify-center items-start">
+            <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full bg-white shadow-md  rounded-xl">
                {items.map((item, key) => (
                   <div key={key}>
 
