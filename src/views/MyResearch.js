@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "services/axios";
 // image
 import noImage from "images/NoImage.gif";
-ะ// context
+// context
 import { SearchContext } from "context/SearchProvider";
 
 const MyResearch = () => {
