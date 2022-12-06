@@ -4,6 +4,7 @@ import Layout from "layouts/FrontendLayout";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "services/axios";
 // image
 import noImage from "images/NoImage.gif";
 import Profile from "images/Profile.jpg";
@@ -114,7 +115,7 @@ export default function Home() {
                               {/* block research ================================================================================ */}
                               <div className="md:flex mt-4 mb-6 ">
                                  <div className="md:w-2/6 flex justify-center items-center">
-                                    <img alt="" className="h-auto max-h-screen" src={item.image ? item.image : noImage} />
+                                    <img alt="" className="h-auto max-h-screen" src={item.image ? BASE_URL + item.image : noImage} />
                                  </div>
                                  <div className="w-full md:ml-3">
                                     <div className="break-words first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "services/axios";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { BASE_URL } from "services/axios";
 // image
 import noImage from "images/NoImage.gif";
 
@@ -31,7 +32,7 @@ const Detail = () => {
                   method: "get",
                   url: `/research/get/${id}`,
                });
-               // console.log(res.data.data);
+               console.log(res.data.data);
                setItems(res.data.data)
             } catch (err) {
                console.log(err);
@@ -62,7 +63,6 @@ const Detail = () => {
             link.download = `${fileName}`;
             link.click();
          });
-         // console.log(res.data.data);
       } catch (err) {
          if (err.response?.status === 403) {
             Swal.fire({
@@ -106,7 +106,7 @@ const Detail = () => {
                   <div key={key}>
 
                      <div className="flex justify-center items-center">
-                        <img alt="" className="h-40" src={item.image ? item.image : noImage} />
+                        <img alt="" className="h-40" src={item.image ? BASE_URL + item.image : noImage} />
                      </div>
                      <hr className="mb-3" />
 
@@ -206,9 +206,9 @@ const Detail = () => {
                            Document
                         </div>
                         <button
-                           onClick={() => item.file_name && onClickFileDownload(item.file_id, item.file_name)}
-                           className={(item.file_name ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-words text-sm text-slate-800"}>
-                           {item.file_name ? item.file_name : "No File!"}
+                           onClick={() => item.file_pdf && onClickFileDownload(item.file_id, item.file_pdf)}
+                           className={(item.file_pdf ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-words text-sm text-slate-800"}>
+                           {item.file_pdf ? item.file_pdf : "No File!"}
                            <div className="ml-3">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
                                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

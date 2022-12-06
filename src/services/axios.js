@@ -10,4 +10,5 @@ const authService = axios.create({
     }
 });
 
+export { BASE_URL };
 export default authService;
