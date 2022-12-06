@@ -7,15 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "services/axios";
 // image
 import noImage from "images/NoImage.gif";
-import Profile from "images/Profile.jpg";
-// context
+ะ// context
 import { SearchContext } from "context/SearchProvider";
 
-export default function Home() {
+const MyResearch = () => {
+
+   const { user_id } = JSON.parse(localStorage.getItem("user"));
+   const [items, setItems] = useState([]);
    const navigate = useNavigate();
    const context = useContext(SearchContext);
    const [loading, setLoading] = useState(true);
-   const [items, setItems] = useState([]);
    const [page, setPage] = useState(1);
    const [perPage] = useState(10);
    const [totalPage, setTotalPage] = useState("");
@@ -34,24 +35,28 @@ export default function Home() {
    };
 
    useEffect(() => {
-      const getResearch = async () => {
-         if (context.search && context.type) setPage(1);
-         setLoading(true);
-         try {
-            const res = await axios({
-               url: `/research/get?page=${page}&per_page=${perPage}&type=${context.type}&search=${context.search}`,
-               method: "get",
-            });
-            setItems(res.data.data);
-            setTotalPage(res.data.total_pages);
-            // console.log(res.data);
-         } catch (err) {
-            console.error(err);
+      if (user_id) {
+         const getResearch = async () => {
+            try {
+               await axios({
+                  url: `/research/myResearch/${user_id}`,
+                  method: "get",
+                  headers: {
+                     Authorization: localStorage.getItem('token').split(/["]/g).join(""),
+                  },
+               }).then((res) => {
+                  // console.log(res.data.data);
+                  setItems(res.data.data);
+                  setTotalPage(res.data.total_pages);
+               });
+            } catch (err) {
+               console.error(err);
+            }
+            setLoading(false);
          }
-         setLoading(false);
-      };
-      getResearch();
-   }, [page, perPage, context.type, context.search]);
+         getResearch();
+      }
+   }, [page, perPage, context.type, user_id]);
 
    useEffect(() => {
       window.scrollTo(0, 0);
@@ -86,29 +91,21 @@ export default function Home() {
                      </div>
                   )}
                   {!loading && (
-                     <div className="md:pr-10">
-
+                     <div className="md:pr-10 block">
+                        <div className="my-5 flex items-center justify-center">
+                           <span className="text-2xl">My Research</span>
+                        </div>
                         {items.map((item, key) => (
                            <div
                               key={key}
-                              className="rounded-xl w-full border p-5 pb-0 md:shadow-lg md:mx-4 bg-white"
+                              className="static rounded-xl w-full border p-5 pb-0 md:shadow-lg md:mx-4 bg-white"
                            >
-                              <div className="flex items-center justify-between border-b pb-3">
-                                 <div className="flex items-center space-x-3">
-                                    <div className="h-10 w-10 rounded-full bg-slate-400 ">
-                                       <img alt="" src={Profile} />
-                                    </div>
-                                    <div className="text-sm md:text-lg text-slate-700">
-                                       {item.creator}
-                                    </div>
-                                 </div>
-                                 <div className="flex items-center space-x-8">
-                                    <div className="text-xs bg-slate-100 p-1 rounded-full text-neutral-500">
-                                       {moment(item.date, "YYYYMMDD HH:mm:ss").fromNow()}
-                                    </div>
+                              {/* block research ================================================================================ */}
+                              <div className="absolute top-5 right-5">
+                                 <div className="text-xs bg-slate-100 p-1 rounded-full text-neutral-500">
+                                    {moment(item.date, "YYYYMMDD HH:mm:ss").fromNow()}
                                  </div>
                               </div>
-                              {/* block research ================================================================================ */}
                               <div className="md:flex mt-4 mb-6 ">
                                  <div className="md:w-2/6 flex justify-center items-center">
                                     <img alt="" className="h-auto max-h-screen" src={item.image ? BASE_URL + item.image : noImage} />
@@ -119,22 +116,16 @@ export default function Home() {
                                           ? `${item.title.substring(0, 150)} . . .`
                                           : item.title}
                                     </div>
-                                    <div className="break-words text-sm text-neutral-600">
-                                       {item.description.length > 500
-                                          ? `${item.description.substring(0, 500)} . . .`
-                                          : item.description}
+                                    <div className="flex items-end mt-2">
+                                       <span className={`${item.isVerified === 0 ? "bg-red-50 text-red-600  rounded-full px-2" : "bg-gray-50 text-green-600 rounded-full px-2"}`}>
+                                          {item.isVerified === 0 ? "Not Verified" : "Verified"}
+                                       </span>
                                     </div>
-                                    <div className="break-words text-sm font-medium underline">
-                                       Institute : {item.rights}
-                                    </div>
-
-                                    <div className="mt-5 flex items-end">
-                                       <div className="flex items-center justify-between text-slate-500">
-                                          <div className="flex space-x-4 md:space-x-8">
-                                             <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 p-2 rounded-full">
-                                                รายละเอียด
-                                             </button>
-                                          </div>
+                                    <div className="flex items-end justify-end ">
+                                       <div className="flex space-x-4 md:space-x-8">
+                                          <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 text-indigo-600 p-2 rounded-full">
+                                             รายละเอียด
+                                          </button>
                                        </div>
                                     </div>
                                  </div>
@@ -169,6 +160,8 @@ export default function Home() {
                </div>
             </div>
          </div>
-      </Layout>
-   );
+      </Layout >
+   )
 }
+
+export default MyResearch

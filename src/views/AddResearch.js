@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import Layout from "layouts/FrontendLayout";
 import axios from "services/axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const AddResearch = () => {
 
-   const user = JSON.parse(localStorage.getItem("user"));
+   const { user_id } = JSON.parse(localStorage.getItem("user"));
+   const navigate = useNavigate();
    const [imageSrc, setImageSrc] = useState("");
+   const [errMsg, setErrMsg] = useState("");
    const [research, setResearch] = useState({
-      title: "",
-      title_alternative: "",
-      creator: "",
-      subject: "",
-      publisher: "",
-      contributor: "",
+      user_id: user_id,
+      title: "test",
+      title_alternative: "test",
+      creator: "test",
+      subject: "test",
+      publisher: "test",
+      contributor: "test",
       date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      source: "",
-      rights: "",
-      description: ""
+      source: "test",
+      rights: "test",
+      description: "test"
    });
    const [researchFiles, setResearchFiles] = useState({
       image: null,
@@ -42,32 +47,72 @@ const AddResearch = () => {
       });
    }
 
-   const handleSubmit = async (e) => {
-      e.preventDefault();
-      // console.log(research);
-      const formData = new FormData();
-      formData.append("pdf", researchFiles.pdf);
-      formData.append("images", researchFiles.image);
-      formData.append("info", JSON.stringify(research));
-      console.log(...formData);
-      try {
-         await axios({
-            url: "research/post",
-            headers: {
-               Authorization: localStorage.getItem('token').split(/["]/g).join(""),
-            },
-            method: "post",
-            data: formData
-         }).then((res) => {
-            console.log(res);
-         })
-      } catch (err) {
-         alert(err);
+   const checkProperties = (obj) => {
+      for (var key in obj) {
+         if (obj[key] === null || obj[key] === "") {
+            return true;
+         }
       }
    }
+
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (checkProperties(research) || checkProperties(researchFiles)) {
+         setErrMsg("Please complete this form.");
+      } else {
+         const formData = new FormData();
+         formData.append("pdf", researchFiles.pdf);
+         formData.append("images", researchFiles.image);
+         formData.append("info", JSON.stringify(research));
+         // console.log(...formData);
+         try {
+            await axios({
+               url: "research/post",
+               headers: {
+                  Authorization: localStorage.getItem('token').split(/["]/g).join(""),
+               },
+               method: "post",
+               data: formData
+            }).then((res) => {
+               console.log(res);
+               Swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  text: 'Save your research.',
+                  showConfirmButton: false,
+                  timer: 1000
+               });
+            })
+         } catch (err) {
+            console.log(err.response);
+            if (err.response?.status === 403) {
+               Swal.fire({
+                  icon: 'warning',
+                  text: 'Token time out!',
+                  confirmButtonColor: "rgb(29 78 216)",
+               }).then(() => {
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("token");
+                  navigate("/signIn");
+               });
+            } else if (err.response?.status === 401) {
+               Swal.fire({
+                  icon: 'warning',
+                  text: 'Token not found',
+                  confirmButtonColor: "rgb(29 78 216)",
+               }).then(() => {
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("token");
+                  navigate("/signIn");
+               });
+            }
+         }
+      }
+
+   }
    useEffect(() => {
-      console.log("u");
-   }, [researchFiles]);
+      setErrMsg("");
+   }, [researchFiles, research]);
 
    return (
       <Layout>
@@ -213,11 +258,20 @@ const AddResearch = () => {
                      <div className="text-lg md:w-2/12 ">
                         Document
                      </div>
-                     <input onChange={(e) => handleFile(e)} id="formFileSm" type="file" accept="application/pdf" className="w-full p-2 border border-solid rounded border-gray-300" />
+                     <label className="block w-full">
+                        <span className="sr-only">Choose File</span>
+                        <input onChange={(e) => handleFile(e)} id="formFileSm" type="file" accept="application/pdf" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                     </label>
                   </div>
 
+                  {/* errMsg */}
+                  <div className={`${errMsg === "" && "hidden"}`}>
+                     <span className="w-full flex justify-center items-center p-5 mt-5 bg-red-50 text-red-600 font-bold">
+                        {errMsg}
+                     </span>
+                  </div>
                   <div className="flex justify-end items-center mt-10">
-                     <button onClick={(e) => handleSubmit(e)} className="px-5 py-3 bg-blue-600 text-white rounded">Submit</button>
+                     <button onClick={(e) => handleSubmit(e)} className="px-5 py-3 text-blue-100 bg-blue-600 font-bold rounded-full">Submit</button>
                   </div>
                </form>
             </div>

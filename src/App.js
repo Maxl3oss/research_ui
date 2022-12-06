@@ -8,6 +8,7 @@ import NoPage from "views/NoPage";
 import SignUp from 'views/SignUp';
 import Detail from 'views/Detail';
 import AddResearch from 'views/AddResearch';
+import MyResearch from 'views/MyResearch';
 //provider 
 import SearchContext from 'context/SearchProvider';
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/detail" element={<Detail />} />
           <Route path="/addResearch" element={<AddResearch />} />
+          <Route path="/myResearch" element={<MyResearch />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </SearchContext>

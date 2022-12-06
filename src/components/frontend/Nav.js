@@ -1,5 +1,5 @@
 import { SearchContext } from 'context/SearchProvider';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -18,9 +18,6 @@ export default function Nav() {
    }
    const popOverClose = () => {
       setPopOverShow(false);
-   }
-   const clearSearchType = (e) => {
-      context.updateType("");
    }
 
    const changeSearchType = (e) => {
@@ -49,21 +46,11 @@ export default function Nav() {
          });
       } catch (err) {
          // console.log(err.response?.status === 403);
-         if (err.response?.status === 403) {
+         if (err.response?.status === 403 || err.response?.status === 401) {
             Swal.fire({
-               icon: 'warning',
-               text: 'Token time out!',
-               confirmButtonColor: "rgb(29 78 216)",
-            }).then(() => {
-               localStorage.removeItem("user");
-               localStorage.removeItem("token");
-               navigate("/signIn");
-            });
-         } else if (err.response?.status === 401) {
-            Swal.fire({
-               icon: 'warning',
-               text: 'Token not found',
-               confirmButtonColor: "rgb(29 78 216)",
+               icon: 'success',
+               text: 'Successfully sign out.',
+               showConfirmButton: false,
             }).then(() => {
                localStorage.removeItem("user");
                localStorage.removeItem("token");
@@ -72,17 +59,6 @@ export default function Nav() {
          }
       }
    }
-
-   useEffect(() => {
-      if (context.type === "" && context.search !== "") {
-         Swal.fire({
-            icon: 'warning',
-            text: 'Please select a category to search!',
-         }).then(() => {
-            setPopOverShow(true);
-         })
-      }
-   }, [context.type, context.search]);
 
    return (
       <nav className="fixed inset-x-0 top-0 bg-white border-gray-200 shadow px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
@@ -103,13 +79,6 @@ export default function Nav() {
                      <div className="w-auto mr-1 flex justify-around ml-2 py-1 px-2 rounded-full border bg-gray-200 ">
                         <div className="">
                            {context.type}
-                        </div>
-                        <div className="ml-1 flex items-center">
-                           <button onClick={clearSearchType}>
-                              <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                           </button>
                         </div>
                      </div>
                   )}
