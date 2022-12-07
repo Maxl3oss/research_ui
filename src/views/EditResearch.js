@@ -4,7 +4,7 @@ import axios from "services/axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-const AddResearch = () => {
+const EditResearch = () => {
 
    const { user_id } = JSON.parse(localStorage.getItem("user"));
    const navigate = useNavigate();
@@ -280,4 +280,5 @@ const AddResearch = () => {
       </Layout >)
 }
 
-export default AddResearch
+export default EditResearch;
+

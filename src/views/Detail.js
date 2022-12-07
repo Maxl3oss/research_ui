@@ -32,7 +32,7 @@ const Detail = () => {
                   method: "get",
                   url: `/research/get/${id}`,
                });
-               console.log(res.data.data);
+               // console.log(res.data.data);
                setItems(res.data.data)
             } catch (err) {
                console.log(err);

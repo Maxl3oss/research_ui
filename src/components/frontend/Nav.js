@@ -61,7 +61,7 @@ export default function Nav() {
    }
 
    return (
-      <nav className="fixed inset-x-0 top-0 bg-white border-gray-200 shadow px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+      <nav className="fixed inset-x-0 top-0 z-50 bg-white border-gray-200 shadow px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
          {/* props */}
          <div className="container flex items-center justify-around mx-auto">
             {/* logo */}
@@ -120,7 +120,6 @@ export default function Nav() {
             </div>
             <div className="hidden w-full md:block md:w-auto " id="navbar-default">
                <ul className="flex flex-col justify-around p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-
                   <li className={!user_email ? "hidden" : ""}>
                      <button onClick={signOut} className="ml-2 flex justify-center items-center py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-red-600 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -131,7 +130,6 @@ export default function Nav() {
                   </li>
 
                   <li className={user_email ? "hidden" : ""}>
-
                      <Link to="/signIn" className="ml-2 block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
                         <div className="flex hover:text-blue-800">
                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

@@ -5,17 +5,16 @@ import moment from "moment";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "services/axios";
+import Swal from "sweetalert2";
 // image
 import noImage from "images/NoImage.gif";
 // context
-import { SearchContext } from "context/SearchProvider";
 
 const MyResearch = () => {
 
    const { user_id } = JSON.parse(localStorage.getItem("user"));
    const [items, setItems] = useState([]);
    const navigate = useNavigate();
-   const context = useContext(SearchContext);
    const [loading, setLoading] = useState(true);
    const [page, setPage] = useState(1);
    const [perPage] = useState(10);
@@ -34,29 +33,71 @@ const MyResearch = () => {
       });
    };
 
+   const handleEdit = async () => {
+      navigate("/editResearch");
+   }
+
+   const handleDelete = async (id) => {
+      try {
+         Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+         }).then(async (result) => {
+            if (result.isConfirmed) {
+               const { user_id } = JSON.parse(localStorage.getItem("user"));
+               await axios({
+                  url: `/research/del`,
+                  method: "post",
+                  data: {
+                     user_id: user_id,
+                     research_id: id
+                  }
+               }).then((res) => {
+                  Swal.fire({
+                     position: 'center',
+                     icon: 'success',
+                     text: 'Your research has been deleted.',
+                     showConfirmButton: false,
+                     timer: 1000
+                  });
+               });
+               getResearch();
+            }
+         })
+      } catch (err) {
+         console.log(err);
+      }
+   }
+
+   const getResearch = async () => {
+      try {
+         await axios({
+            url: `/research/myResearch/${user_id}?page=${page}&per_page=${perPage}`,
+            method: "get",
+            headers: {
+               Authorization: localStorage.getItem('token').split(/["]/g).join(""),
+            },
+         }).then((res) => {
+            // console.log(res.data.data);
+            setItems(res.data.data);
+            setTotalPage(res.data.total_pages);
+         });
+      } catch (err) {
+         console.error(err);
+      }
+      setLoading(false);
+   }
+
    useEffect(() => {
       if (user_id) {
-         const getResearch = async () => {
-            try {
-               await axios({
-                  url: `/research/myResearch/${user_id}`,
-                  method: "get",
-                  headers: {
-                     Authorization: localStorage.getItem('token').split(/["]/g).join(""),
-                  },
-               }).then((res) => {
-                  // console.log(res.data.data);
-                  setItems(res.data.data);
-                  setTotalPage(res.data.total_pages);
-               });
-            } catch (err) {
-               console.error(err);
-            }
-            setLoading(false);
-         }
          getResearch();
       }
-   }, [page, perPage, context.type, user_id]);
+   }, [user_id]);
 
    useEffect(() => {
       window.scrollTo(0, 0);
@@ -91,14 +132,14 @@ const MyResearch = () => {
                      </div>
                   )}
                   {!loading && (
-                     <div className="md:pr-10 block">
+                     <div className="md:pr-10 block min-h-screen">
                         <div className="my-5 flex items-center justify-center">
                            <span className="text-2xl">My Research</span>
                         </div>
                         {items.map((item, key) => (
                            <div
                               key={key}
-                              className="static rounded-xl w-full border p-5 pb-0 md:shadow-lg md:mx-4 bg-white"
+                              className="relative rounded-xl border px-5 md:shadow-lg md:mx-4 bg-white"
                            >
                               {/* block research ================================================================================ */}
                               <div className="absolute top-5 right-5">
@@ -108,25 +149,35 @@ const MyResearch = () => {
                               </div>
                               <div className="md:flex mt-4 mb-6 ">
                                  <div className="md:w-2/6 flex justify-center items-center">
-                                    <img alt="" className="h-auto max-h-screen" src={item.image ? BASE_URL + item.image : noImage} />
+                                    <img alt="" className="md:max-h-fit max-h-96" src={item.image ? BASE_URL + item.image : noImage} />
                                  </div>
-                                 <div className="w-full md:ml-3">
+                                 <div className="md:ml-3 w-full">
                                     <div className="break-words first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">
                                        {item.title.length > 150
                                           ? `${item.title.substring(0, 150)} . . .`
                                           : item.title}
                                     </div>
+
                                     <div className="flex items-end mt-2">
                                        <span className={`${item.isVerified === 0 ? "bg-red-50 text-red-600  rounded-full px-2" : "bg-gray-50 text-green-600 rounded-full px-2"}`}>
                                           {item.isVerified === 0 ? "Not Verified" : "Verified"}
                                        </span>
                                     </div>
-                                    <div className="flex items-end justify-end ">
-                                       <div className="flex space-x-4 md:space-x-8">
+
+                                    <div className="lg:absolute md:bottom-5 flex items-center  mt-5">
+                                       <div className="flex space-x-4 justify-around md:space-x-8">
                                           <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 text-indigo-600 p-2 rounded-full">
                                              รายละเอียด
                                           </button>
                                        </div>
+                                    </div>
+                                    <div className="absolute bottom-5 right-5">
+                                       <button onClick={() => handleEdit(item.id)} className="text-xs md:text-sm bg-yellow-600 text-white p-2 rounded-full">
+                                          แก้ไข
+                                       </button>
+                                       <button onClick={() => handleDelete(item.id)} className="ml-3 text-xs md:text-sm bg-red-600 text-white p-2 rounded-full">
+                                          ลบ
+                                       </button>
                                     </div>
                                  </div>
                               </div>

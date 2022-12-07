@@ -86,7 +86,7 @@ export default function Home() {
                      </div>
                   )}
                   {!loading && (
-                     <div className="md:pr-10">
+                     <div className="md:pr-10 min-h-screen">
 
                         {items.map((item, key) => (
                            <div
@@ -113,7 +113,7 @@ export default function Home() {
                                  <div className="md:w-2/6 flex justify-center items-center">
                                     <img alt="" className="h-auto max-h-screen" src={item.image ? BASE_URL + item.image : noImage} />
                                  </div>
-                                 <div className="w-full md:ml-3">
+                                 <div className="lg:relative w-full md:ml-3">
                                     <div className="break-words first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">
                                        {item.title.length > 150
                                           ? `${item.title.substring(0, 150)} . . .`
@@ -128,7 +128,7 @@ export default function Home() {
                                        Institute : {item.rights}
                                     </div>
 
-                                    <div className="mt-5 flex items-end">
+                                    <div className="lg:absolute lg:bottom-0 mt-5 flex items-end">
                                        <div className="flex items-center justify-between text-slate-500">
                                           <div className="flex space-x-4 md:space-x-8">
                                              <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 p-2 rounded-full">
