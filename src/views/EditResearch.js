@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import Layout from "layouts/FrontendLayout";
 import axios from "services/axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { ResearchContext } from 'context/ResearchProvider';
+import { BASE_URL } from 'services/axios';
 
 const EditResearch = () => {
-
-   const { user_id } = JSON.parse(localStorage.getItem("user"));
+   const context = useContext(ResearchContext);
+   const [user_id, setUser_id] = useState("");
    const navigate = useNavigate();
    const [imageSrc, setImageSrc] = useState("");
    const [errMsg, setErrMsg] = useState("");
@@ -111,9 +113,61 @@ const EditResearch = () => {
       }
 
    }
+
    useEffect(() => {
+      if (context.researchId) {
+         const getResearch = async () => {
+            try {
+               await axios({
+                  method: "get",
+                  url: `/research/get/${context.researchId}`,
+               }).then((res) => {
+                  let result = res.data.data;
+                  console.log(result[0]);
+                  setResearchFiles(current => {
+                     return {
+                        ...current,
+                        image: BASE_URL + result[0].image,
+                        pdf: result[0].file_pdf
+                     }
+                  });
+                  setResearch(current => {
+                     return {
+                        ...current,
+                        title: result[0].title,
+                        title_alternative: result[0].title_alternative,
+                        creator: result[0].creator,
+                        subject: result[0].subject,
+                        publisher: result[0].publisher,
+                        contributor: result[0].contributor,
+                        source: result[0].source,
+                        rights: result[0].rights,
+                        description: result[0].description
+                     }
+                  })
+               })
+            } catch (err) {
+               console.log(err);
+            }
+         }
+         getResearch();
+      } else {
+         navigate("/myResearch");
+      }
+   }, [context.researchId, navigate]);
+
+   useEffect(() => {
+      if (JSON.parse(localStorage.getItem("user"))) {
+         setUser_id(JSON.parse(localStorage.getItem("user")).user_id);
+      } else {
+         navigate("/signIn");
+      }
+   }, [navigate]);
+
+   useEffect(() => {
+      console.log(researchFiles);
       setErrMsg("");
-   }, [researchFiles, research]);
+   }, [researchFiles, research, context.researchId]);
 
    return (
       <Layout>
@@ -129,7 +183,7 @@ const EditResearch = () => {
                               <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 1MB)</p>
                            </div>
                            {researchFiles.image && (
-                              <img src={imageSrc} alt="" className="h-full" />
+                              <img src={imageSrc || researchFiles.image} alt="" className="h-full" />
                            )}
                            <input id="dropzone-file" type="file" accept="image/*" onChange={(e) => handleImage(e)} className="hidden" />
                         </label>
@@ -147,6 +201,7 @@ const EditResearch = () => {
                               ...current, title: e.target.value
                            }
                         })}
+                        value={research.title}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" required />
                   </div>
 
@@ -160,6 +215,7 @@ const EditResearch = () => {
                               ...current, title_alternative: e.target.value
                            }
                         })}
+                        value={research.title_alternative}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" required />
                   </div>
 
@@ -173,6 +229,7 @@ const EditResearch = () => {
                               ...current, creator: e.target.value
                            }
                         })}
+                        value={research.creator}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" required />
                   </div>
 
@@ -186,6 +243,7 @@ const EditResearch = () => {
                               ...current, subject: e.target.value
                            }
                         })}
+                        value={research.subject}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" />
                   </div>
 
@@ -199,6 +257,7 @@ const EditResearch = () => {
                               ...current, description: e.target.value
                            }
                         })}
+                        value={research.description}
                         id="comment" rows="4" className="w-full p-2 text-sm border-solid border rounded" required></textarea>
                   </div>
 
@@ -212,6 +271,7 @@ const EditResearch = () => {
                               ...current, publisher: e.target.value
                            }
                         })}
+                        value={research.publisher}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" />
                   </div>
 
@@ -225,6 +285,7 @@ const EditResearch = () => {
                               ...current, contributor: e.target.value
                            }
                         })}
+                        value={research.contributor}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" />
                   </div>
 
@@ -238,6 +299,7 @@ const EditResearch = () => {
                               ...current, source: e.target.value
                            }
                         })}
+                        value={research.source}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" />
                   </div>
 
@@ -251,6 +313,7 @@ const EditResearch = () => {
                               ...current, rights: e.target.value
                            }
                         })}
+                        value={research.rights}
                         type="text" className="w-full p-2 text-sm border-solid border rounded" />
                   </div>
 

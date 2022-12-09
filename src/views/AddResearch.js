@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 const AddResearch = () => {
 
-   const { user_id } = JSON.parse(localStorage.getItem("user"));
+   // const { user_id } = JSON.parse(localStorage.getItem("user"));
+   const [user_id, setUser_id] = useState("");
    const navigate = useNavigate();
    const [imageSrc, setImageSrc] = useState("");
    const [errMsg, setErrMsg] = useState("");
@@ -111,6 +112,15 @@ const AddResearch = () => {
       }
 
    }
+
+   useEffect(() => {
+      if (JSON.parse(localStorage.getItem("user"))) {
+         setUser_id(JSON.parse(localStorage.getItem("user")).user_id);
+      } else {
+         navigate("/signIn");
+      }
+   }, [navigate]);
+
    useEffect(() => {
       setErrMsg("");
    }, [researchFiles, research]);

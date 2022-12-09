@@ -9,10 +9,12 @@ import Swal from "sweetalert2";
 // image
 import noImage from "images/NoImage.gif";
 // context
+import { ResearchContext } from "context/ResearchProvider";
 
 const MyResearch = () => {
 
-   const { user_id } = JSON.parse(localStorage.getItem("user"));
+   const context = useContext(ResearchContext);
+   const [user_id, setUser_id] = useState("");
    const [items, setItems] = useState([]);
    const navigate = useNavigate();
    const [loading, setLoading] = useState(true);
@@ -33,7 +35,8 @@ const MyResearch = () => {
       });
    };
 
-   const handleEdit = async () => {
+   const handleEdit = async (id) => {
+      context.setResearchId(id);
       navigate("/editResearch");
    }
 
@@ -94,10 +97,36 @@ const MyResearch = () => {
    }
 
    useEffect(() => {
+      if (JSON.parse(localStorage.getItem("user"))) {
+         setUser_id(JSON.parse(localStorage.getItem("user")).user_id);
+      } else {
+         navigate("/signIn");
+      }
+   }, [navigate]);
+
+   useEffect(() => {
       if (user_id) {
+         const getResearch = async () => {
+            try {
+               await axios({
+                  url: `/research/myResearch/${user_id}?page=${page}&per_page=${perPage}`,
+                  method: "get",
+                  headers: {
+                     Authorization: localStorage.getItem('token').split(/["]/g).join(""),
+                  },
+               }).then((res) => {
+                  // console.log(res.data.data);
+                  setItems(res.data.data);
+                  setTotalPage(res.data.total_pages);
+               });
+            } catch (err) {
+               console.error(err);
+            }
+            setLoading(false);
+         }
          getResearch();
       }
-   }, [user_id]);
+   }, [page, perPage, user_id]);
 
    useEffect(() => {
       window.scrollTo(0, 0);

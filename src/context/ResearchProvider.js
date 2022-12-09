@@ -4,6 +4,7 @@ const ResearchContext = React.createContext();
 
 const ResearchProvider = ({ children }) => {
    const [researchId, setResearchId] = useState();
+
    const value = useMemo(() => ({ researchId, setResearchId }), [researchId]);
 
    return (
@@ -15,12 +16,3 @@ const ResearchProvider = ({ children }) => {
 
 export { ResearchContext };
 export default ResearchProvider;
-
-
-
-
-
-
-
-
-
