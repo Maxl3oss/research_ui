@@ -44,7 +44,7 @@ export default function Home() {
             });
             setItems(res.data.data);
             setTotalPage(res.data.total_pages);
-            // console.log(res.data);
+            console.log(res.data.data);
          } catch (err) {
             console.error(err);
          }
@@ -86,7 +86,7 @@ export default function Home() {
                      </div>
                   )}
                   {!loading && (
-                     <div className="md:pr-10 min-h-screen">
+                     <div className="md:pr-10  w-full min-h-screen">
 
                         {items.map((item, key) => (
                            <div
@@ -99,7 +99,7 @@ export default function Home() {
                                        <img alt="" src={Profile} />
                                     </div>
                                     <div className="text-sm md:text-lg text-slate-700">
-                                       {item.creator}
+                                       {item.user_name}
                                     </div>
                                  </div>
                                  <div className="flex items-center space-x-8">
@@ -132,7 +132,7 @@ export default function Home() {
                                        <div className="flex items-center justify-between text-slate-500">
                                           <div className="flex space-x-4 md:space-x-8">
                                              <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 p-2 rounded-full">
-                                                รายละเอียด
+                                                Detail
                                              </button>
                                           </div>
                                        </div>

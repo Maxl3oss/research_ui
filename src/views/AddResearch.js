@@ -7,19 +7,19 @@ import { useNavigate } from "react-router-dom";
 const AddResearch = () => {
 
    // const { user_id } = JSON.parse(localStorage.getItem("user"));
-   const [user_id, setUser_id] = useState("");
+   const localISOTime = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
    const navigate = useNavigate();
    const [imageSrc, setImageSrc] = useState("");
    const [errMsg, setErrMsg] = useState("");
    const [research, setResearch] = useState({
-      user_id: user_id,
+      user_id: "",
       title: "test",
       title_alternative: "test",
       creator: "test",
       subject: "test",
       publisher: "test",
       contributor: "test",
-      date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      date: localISOTime.slice(0, 19).replace('T', ' '),
       source: "test",
       rights: "test",
       description: "test"
@@ -59,6 +59,8 @@ const AddResearch = () => {
    const handleSubmit = async (e) => {
       e.preventDefault();
       if (checkProperties(research) || checkProperties(researchFiles)) {
+         console.log(research);
+         console.log(researchFiles);
          setErrMsg("Please complete this form.");
       } else {
          const formData = new FormData();
@@ -115,13 +117,19 @@ const AddResearch = () => {
 
    useEffect(() => {
       if (JSON.parse(localStorage.getItem("user"))) {
-         setUser_id(JSON.parse(localStorage.getItem("user")).user_id);
+         setResearch(current => {
+            return {
+               ...current, user_id: JSON.parse(localStorage.getItem("user")).user_id
+            }
+         });
       } else {
          navigate("/signIn");
       }
    }, [navigate]);
 
    useEffect(() => {
+      console.log(research.date);
+      // console.log(new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
       setErrMsg("");
    }, [researchFiles, research]);
 

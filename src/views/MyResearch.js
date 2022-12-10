@@ -196,16 +196,16 @@ const MyResearch = () => {
                                     <div className="lg:absolute md:bottom-5 flex items-center  mt-5">
                                        <div className="flex space-x-4 justify-around md:space-x-8">
                                           <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 text-indigo-600 p-2 rounded-full">
-                                             รายละเอียด
+                                             Detail
                                           </button>
                                        </div>
                                     </div>
                                     <div className="absolute bottom-5 right-5">
-                                       <button onClick={() => handleEdit(item.id)} className="text-xs md:text-sm bg-yellow-600 text-white p-2 rounded-full">
-                                          แก้ไข
+                                       <button onClick={() => handleEdit(item.id)} className="text-xs md:text-sm bg-yellow-100 text-yellow-600 p-2 rounded-full">
+                                          Edit
                                        </button>
                                        <button onClick={() => handleDelete(item.id)} className="ml-3 text-xs md:text-sm bg-red-600 text-white p-2 rounded-full">
-                                          ลบ
+                                          Delete
                                        </button>
                                     </div>
                                  </div>
