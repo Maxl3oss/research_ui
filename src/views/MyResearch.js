@@ -161,7 +161,7 @@ const MyResearch = () => {
                      </div>
                   )}
                   {!loading && (
-                     <div className="md:pr-10 block min-h-screen">
+                     <div className="md:pr-10 block min-h-screen w-full">
                         <div className="my-5 flex items-center justify-center">
                            <span className="text-2xl">My Research</span>
                         </div>
@@ -215,7 +215,7 @@ const MyResearch = () => {
                         ))}
                         {/* if no data  */}
                         {items.length === 0 && (
-                           <div className="mt-4 h-screen">No results match that query</div>
+                           <div className="mt-4 w-full flex justify-center">No results match that query</div>
                         )}
                      </div>
                   )}

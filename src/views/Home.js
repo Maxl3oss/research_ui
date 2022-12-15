@@ -44,7 +44,6 @@ export default function Home() {
             });
             setItems(res.data.data);
             setTotalPage(res.data.total_pages);
-            console.log(res.data.data);
          } catch (err) {
             console.error(err);
          }
@@ -144,7 +143,7 @@ export default function Home() {
                         ))}
                         {/* if no data  */}
                         {items.length === 0 && (
-                           <div className="mt-4 h-screen">No results match that query</div>
+                           <div className="mt-4 h-screen w-full flex justify-center">No results match that query</div>
                         )}
                      </div>
                   )}

@@ -13,16 +13,16 @@ const EditResearch = () => {
    const [errMsg, setErrMsg] = useState("");
    const [research, setResearch] = useState({
       user_id: "",
-      title: "test",
-      title_alternative: "test",
-      creator: "test",
-      subject: "test",
-      publisher: "test",
-      contributor: "test",
-      date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      source: "test",
-      rights: "test",
-      description: "test"
+      file_id: "",
+      title: "",
+      title_alternative: "",
+      creator: "",
+      subject: "",
+      publisher: "",
+      contributor: "",
+      source: "",
+      rights: "",
+      description: ""
    });
    const [researchFiles, setResearchFiles] = useState({
       image: null,
@@ -193,6 +193,7 @@ const EditResearch = () => {
                   setResearch(current => {
                      return {
                         ...current,
+                        file_id: result[0].file_id,
                         title: result[0].title,
                         title_alternative: result[0].title_alternative,
                         creator: result[0].creator,
