@@ -22,7 +22,7 @@ const AddResearch = () => {
       publisher: "test",
       contributor: "test",
       date: localISOTime.slice(0, 19).replace('T', ' '),
-      source: "test",
+      source: "-",
       rights: "test",
       description: "test"
    });
@@ -163,8 +163,8 @@ const AddResearch = () => {
    }, [navigate]);
 
    useEffect(() => {
-      // console.log(research.date);
-      // researchFiles.image && console.log(researchFiles.image.size);
+      // console.log(localISOTime.slice(0, 19).replace('T', ' '));
+      // console.log(new Date().toISOString().slice(0, 19).replace('T', ' '));
       setErrMsg("");
    }, [researchFiles, research]);
 

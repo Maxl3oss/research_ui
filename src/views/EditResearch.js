@@ -12,6 +12,7 @@ const EditResearch = () => {
    const [imageSrc, setImageSrc] = useState("");
    const [errMsg, setErrMsg] = useState("");
    const [research, setResearch] = useState({
+      research_id: "",
       user_id: "",
       file_id: "",
       title: "",
@@ -193,6 +194,7 @@ const EditResearch = () => {
                   setResearch(current => {
                      return {
                         ...current,
+                        research_id: context.researchId,
                         file_id: result[0].file_id,
                         title: result[0].title,
                         title_alternative: result[0].title_alternative,
