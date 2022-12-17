@@ -100,13 +100,13 @@ const Detail = () => {
 
    return (
       <Layout>
-         <div className="min-h-screen md:pt-5 md:px-5 bg-slate-200  flex justify-center items-start">
+         <div className="min-h-screen md:pt-5 md:px-5 bg-slate-200 flex justify-center items-start">
             <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full bg-white shadow-md  rounded-xl">
                {items.map((item, key) => (
                   <div key={key}>
 
                      <div className="flex justify-center items-center">
-                        <img alt="" className="h-40" src={item.image ? BASE_URL + item.image : noImage} />
+                        <img alt="" className="h-56 mb-3" src={item.image ? BASE_URL + item.image : noImage} />
                      </div>
                      <hr className="mb-3" />
 

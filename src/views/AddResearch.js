@@ -95,6 +95,9 @@ const AddResearch = () => {
    const handleSubmit = async (e) => {
       e.preventDefault();
       validateForm();
+   }
+
+   useEffect(() => {
       if (isSuccess) {
          const formData = new FormData();
          formData.append("pdf", researchFiles.pdf);
@@ -103,7 +106,7 @@ const AddResearch = () => {
          // console.log(...formData);
          setLoading(true);
          try {
-            await axios({
+            axios({
                url: "research/post",
                headers: {
                   Authorization: localStorage.getItem('token').split(/["]/g).join(""),
@@ -120,7 +123,7 @@ const AddResearch = () => {
                   showConfirmButton: false,
                   timer: 1000
                });
-               navigate("/myResearch");
+               navigate("/profile");
             })
          } catch (err) {
             setLoading(false);
@@ -148,7 +151,7 @@ const AddResearch = () => {
             }
          }
       }
-   }
+   }, [isSuccess]);
 
    useEffect(() => {
       if (JSON.parse(localStorage.getItem("user"))) {

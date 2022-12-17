@@ -133,7 +133,7 @@ const MyResearch = () => {
    }, []);
 
    return (
-      <Layout>
+      <>
          <div className={`${loading && "h-screen"}`}>
             <div className="md:flex-row flex flex-col w-full">
                <div className="md:mt-3 flex flex-col items-center w-full">
@@ -178,10 +178,10 @@ const MyResearch = () => {
                               </div>
                               <div className="md:flex mt-4 mb-6 ">
                                  <div className="md:w-2/6 flex justify-center items-center">
-                                    <img alt="" className="md:max-h-fit max-h-96" src={item.image ? BASE_URL + item.image : noImage} />
+                                    <img alt="" className="object-cover max-h-56" src={item.image ? BASE_URL + item.image : noImage} />
                                  </div>
-                                 <div className="md:ml-3 w-full">
-                                    <div className="break-words first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">
+                                 <div className="md:ml-3 mt-5 md:mt-0 w-full">
+                                    <div className="break-words first-letter:mb-3 font-semibold md:font-medium text-sm md:text-base ">
                                        {item.title.length > 150
                                           ? `${item.title.substring(0, 150)} . . .`
                                           : item.title}
@@ -240,7 +240,7 @@ const MyResearch = () => {
                </div>
             </div>
          </div>
-      </Layout >
+      </ >
    )
 }
 

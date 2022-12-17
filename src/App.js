@@ -8,8 +8,9 @@ import NoPage from "views/NoPage";
 import SignUp from 'views/SignUp';
 import Detail from 'views/Detail';
 import AddResearch from 'views/AddResearch';
-import MyResearch from 'views/MyResearch';
+// import MyResearch from 'views/MyResearch';
 import EditResearch from 'views/EditResearch';
+import Profile from 'views/Profile';
 //provider 
 import SearchContext from 'context/SearchProvider';
 import ResearchContext from 'context/ResearchProvider';
@@ -25,7 +26,8 @@ function App() {
             <Route path="/detail" element={<Detail />} />
             <Route path="/addResearch" element={<AddResearch />} />
             <Route path="/editResearch" element={<EditResearch />} />
-            <Route path="/myResearch" element={<MyResearch />} />
+            <Route path="/profile" element={<Profile />} />
+            {/* <Route path="/myResearch" element={<MyResearch />} /> */}
             <Route path="*" element={<NoPage />} />
           </Routes>
         </SearchContext>

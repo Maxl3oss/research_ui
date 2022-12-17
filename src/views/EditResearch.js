@@ -25,6 +25,7 @@ const EditResearch = () => {
       rights: "",
       description: ""
    });
+   const [isSuccess, setIsSuccess] = useState(false);
    const [researchFiles, setResearchFiles] = useState({
       image: null,
       pdf: null
@@ -57,18 +58,55 @@ const EditResearch = () => {
       }
    }
 
+   const validateForm = () => {
+      // check image size on submit
+      // const MIN_FILE_SIZE = 1024 // 1MB
+      const MAX_FILE_SIZE = 5120 // 5MB
+      const fileSizeKiloBytes = researchFiles.image.size / 1024;
+
+      if (!researchFiles.image && !researchFiles.pdf) {
+         setErrMsg("Please choose a file(image & pdf)");
+         setIsSuccess(false);
+         return
+      }
+
+      // if (fileSizeKiloBytes < MIN_FILE_SIZE) {
+      //    setErrMsg("File(image) size is less than minimum limit");
+      //    setIsSuccess(false);
+      //    return
+      // }
+      if (fileSizeKiloBytes > MAX_FILE_SIZE) {
+         setErrMsg("File(image) size is greater than maximum limit(5mb)");
+         setIsSuccess(false);
+         return
+      }
+      // check form
+      if (checkProperties(research) || checkProperties(researchFiles)) {
+         console.log(research);
+         console.log(researchFiles);
+         setErrMsg("Please complete this form");
+         setIsSuccess(false);
+         return
+      }
+      setErrMsg("");
+      setIsSuccess(true);
+   }
+
    const handleSubmit = async (e) => {
       e.preventDefault();
-      if (checkProperties(research) || checkProperties(researchFiles)) {
-         setErrMsg("Please complete this form.");
-      } else {
+      console.log(isSuccess);
+      validateForm();
+   }
+
+   useEffect(() => {
+      if (isSuccess) {
          const formData = new FormData();
          formData.append("pdf", researchFiles.pdf);
          formData.append("images", researchFiles.image);
          formData.append("info", JSON.stringify(research));
          // console.log(...formData);
          try {
-            await axios({
+            axios({
                url: "research/update",
                headers: {
                   Authorization: localStorage.getItem('token').split(/["]/g).join(""),
@@ -84,7 +122,7 @@ const EditResearch = () => {
                   showConfirmButton: false,
                   timer: 1000
                });
-               navigate("/myResearch");
+               navigate("/profile");
             })
          } catch (err) {
             console.log(err.response);
@@ -111,8 +149,7 @@ const EditResearch = () => {
             }
          }
       }
-
-   }
+   }, [isSuccess]);
 
    const onClickDeletePdf = () => {
       setResearchFiles(current => {
@@ -214,7 +251,7 @@ const EditResearch = () => {
          }
          getResearch();
       } else {
-         navigate("/myResearch");
+         navigate("/profile");
       }
    }, [context.researchId, navigate]);
 
@@ -426,7 +463,7 @@ const EditResearch = () => {
                   </div>
                   {/* submit */}
                   <div className="flex justify-between items-center mt-10">
-                     <button onClick={(e) => handleSubmit(e)} className="px-5 py-3 text-gray-600 bg-gray-100 font-bold rounded-full">Cancel</button>
+                     <button onClick={(e) => navigate("/profile")} className="px-5 py-3 text-gray-600 bg-gray-100 font-bold rounded-full">Cancel</button>
                      <button onClick={(e) => handleSubmit(e)} className="px-5 py-3 text-blue-100 bg-blue-600 font-bold rounded-full">Submit</button>
                   </div>
                </form>
