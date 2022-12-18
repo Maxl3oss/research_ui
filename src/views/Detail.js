@@ -106,7 +106,7 @@ const Detail = () => {
                   <div key={key}>
 
                      <div className="flex justify-center items-center">
-                        <img alt="" className="h-56 mb-3" src={item.image ? BASE_URL + item.image : noImage} />
+                        <img alt="" className="max-h-screen mb-3" src={item.image ? BASE_URL + item.image : noImage} />
                      </div>
                      <hr className="mb-3" />
 

@@ -22,7 +22,7 @@ export default function SignIn() {
    }
 
    const SignIn = async () => {
-      await axios.post("/user/signIn", {
+      await axios.post("/auth/signIn", {
          email: email,
          pass: pass,
       }).then((res) => {

@@ -33,21 +33,30 @@ const AddResearch = () => {
 
    const handleImage = (e) => {
       let file_image = e.target.files[0];
-      setImageSrc(URL.createObjectURL(file_image));
-      setResearchFiles(current => {
-         return {
-            ...current, image: file_image
-         }
-      });
+      if (file_image.type.startsWith('image/')) {
+         setImageSrc(URL.createObjectURL(file_image));
+         setResearchFiles(current => {
+            return {
+               ...current, image: file_image
+            }
+         });
+      } else {
+         setErrMsg("Invalid file type(image)");
+      }
    }
 
    const handleFile = (e) => {
       let file_pdf = e.target.files[0];
-      setResearchFiles(current => {
-         return {
-            ...current, pdf: file_pdf
-         }
-      });
+      if (file_pdf.type === 'application/pdf') {
+         setResearchFiles(current => {
+            return {
+               ...current, pdf: file_pdf
+            }
+         });
+      } else {
+         document.getElementById("formFilePDF").value = "";
+         setErrMsg("Invalid file type(pdf)");
+      }
    }
 
    const checkProperties = (obj) => {
@@ -82,8 +91,8 @@ const AddResearch = () => {
       }
       // check form
       if (checkProperties(research) || checkProperties(researchFiles)) {
-         console.log(research);
-         console.log(researchFiles);
+         // console.log(research);
+         // console.log(researchFiles);
          setErrMsg("Please complete this form");
          setIsSuccess(false);
          return
@@ -317,7 +326,7 @@ const AddResearch = () => {
                      </div>
                      <label className="block w-full">
                         <span className="sr-only">Choose File</span>
-                        <input onChange={(e) => handleFile(e)} id="formFileSm" type="file" accept="application/pdf" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                        <input onChange={(e) => handleFile(e)} id="formFilePDF" type="file" accept="application/pdf" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
                      </label>
                   </div>
 

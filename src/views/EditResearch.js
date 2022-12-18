@@ -82,8 +82,6 @@ const EditResearch = () => {
       }
       // check form
       if (checkProperties(research) || checkProperties(researchFiles)) {
-         console.log(research);
-         console.log(researchFiles);
          setErrMsg("Please complete this form");
          setIsSuccess(false);
          return
@@ -94,7 +92,7 @@ const EditResearch = () => {
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      console.log(isSuccess);
+      // console.log(isSuccess);
       validateForm();
    }
 

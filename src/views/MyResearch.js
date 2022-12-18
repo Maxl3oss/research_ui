@@ -56,6 +56,7 @@ const MyResearch = () => {
                await axios({
                   url: `/research/del`,
                   method: "post",
+                  headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
                   data: {
                      user_id: user_id,
                      research_id: id
@@ -82,9 +83,7 @@ const MyResearch = () => {
          await axios({
             url: `/research/myResearch/${user_id}?page=${page}&per_page=${perPage}`,
             method: "get",
-            headers: {
-               Authorization: localStorage.getItem('token').split(/["]/g).join(""),
-            },
+            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
          }).then((res) => {
             // console.log(res.data.data);
             setItems(res.data.data);
@@ -111,9 +110,7 @@ const MyResearch = () => {
                await axios({
                   url: `/research/myResearch/${user_id}?page=${page}&per_page=${perPage}`,
                   method: "get",
-                  headers: {
-                     Authorization: localStorage.getItem('token').split(/["]/g).join(""),
-                  },
+                  headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
                }).then((res) => {
                   // console.log(res.data.data);
                   setItems(res.data.data);
@@ -178,8 +175,9 @@ const MyResearch = () => {
                               </div>
                               <div className="md:flex mt-4 mb-6 ">
                                  <div className="md:w-2/6 flex justify-center items-center">
-                                    <img alt="" className="object-cover max-h-56" src={item.image ? BASE_URL + item.image : noImage} />
+                                    <img alt="" className="object-cover max-h-56 w-full" src={item.image ? BASE_URL + item.image : noImage} />
                                  </div>
+
                                  <div className="md:ml-3 mt-5 md:mt-0 w-full">
                                     <div className="break-words first-letter:mb-3 font-semibold md:font-medium text-sm md:text-base ">
                                        {item.title.length > 150
@@ -200,6 +198,7 @@ const MyResearch = () => {
                                           </button>
                                        </div>
                                     </div>
+
                                     <div className="absolute bottom-5 right-5">
                                        <button onClick={() => handleEdit(item.id)} className="text-xs md:text-sm bg-yellow-100 text-yellow-600 p-2 rounded-full">
                                           Edit

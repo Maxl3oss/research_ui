@@ -1,7 +1,7 @@
 import { SearchContext } from 'context/SearchProvider';
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from "react-router-dom";
-import axios from 'axios';
+import axios from 'services/axios';
 import Swal from 'sweetalert2';
 
 export default function Nav() {
@@ -31,7 +31,7 @@ export default function Nav() {
          await axios({
             method: "post",
             headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
-            url: "/api/user/signOut",
+            url: "/auth/signOut",
          }).then((res) => {
             Swal.fire({
                icon: 'success',

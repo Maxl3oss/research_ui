@@ -27,9 +27,9 @@ export default function SignUp() {
          pass === "" ||
          conPass === ""
       ) {
-         setErrMsg("Please complete this form.");
+         setErrMsg("Please complete this form");
       } else if (pass !== conPass) {
-         setErrMsg("Passwords do not match.");
+         setErrMsg("Passwords do not match");
       } else {
          SignUp();
       }
@@ -38,7 +38,7 @@ export default function SignUp() {
       setLoading(true);
       try {
          const response = await axios({
-            url: "/user/signUp",
+            url: "/auth/signUp",
             method: "post",
             data: {
                email: email,
@@ -63,7 +63,7 @@ export default function SignUp() {
       } catch (err) {
          setLoading(false);
          if (err.response.data.message.code === "ER_DUP_ENTRY") {
-            setErrMsg("This email already exists.");
+            setErrMsg("This email already exists");
          }
          // console.log(err);
       }
