@@ -184,88 +184,91 @@ const Profile = () => {
 
          </Layout >
          {/* edit profile */}
-         <div className={`${showEdit && "absolute z-50 top-0 left-0 h-full bg-opacity-50 w-full bg-gray-900"}`}>
-            <div className="flex justify-center items-center h-screen text-gray-600">
-               <div className="bg-white rounded h-full md:h-3/4 w-full md:w-[600px] block">
-                  <div className="flex p-2 items-center">
-                     {/* close */}
-                     <div onClick={handleEdit} className="text-2xl w-[62] p-2 rounded-full hover:bg-gray-100 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+         <div className={`${!showEdit && "hidden"}`} >
+            <div className="absolute z-50 top-0 left-0 h-full bg-opacity-50 w-full bg-gray-900">
+               <div className="flex justify-center items-center h-screen text-gray-600">
+                  <div className="bg-white rounded h-full md:h-3/4 w-full md:w-[600px] block">
+                     <div className="flex p-2 items-center">
+                        {/* close */}
+                        <div onClick={handleEdit} className="text-2xl w-[62] p-2 rounded-full hover:bg-gray-100 cursor-pointer">
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                           </svg>
+                        </div>
+                        <div className="flex w-full justify-center">
+                           <span className="text-lg">
+                              Edit Profile
+                           </span>
+                        </div>
+                        <div>
+                           <button onClick={submitEditProfile} className="bg-blue-600 hover:bg-blue-500 w-[62] text-blue-50 rounded-full text-sm py-2 px-4 shadow-sm">
+                              Save
+                           </button>
+                        </div>
                      </div>
-                     <div className="flex w-full justify-center">
-                        <span className="text-lg">
-                           Edit Profile
-                        </span>
-                     </div>
-                     <div>
-                        <button onClick={submitEditProfile} className="bg-blue-600 hover:bg-blue-500 w-[62] text-blue-50 rounded-full text-sm py-2 px-4 shadow-sm">
-                           Save
-                        </button>
-                     </div>
-                  </div>
-                  <div className="h-5/6 overflow-y-auto">
-                     <div className="flex flex-col justify-center items-center ">
-                        {/* err message */}
-                        <div className={`${errMsg === "" ? "hidden" : "flex justify-center w-full"}`}>
-                           <span className="text-red-600 bg-red-100 w-4/5 flex justify-center rounded py-2 px-5">{errMsg}</span>
-                        </div>
-                        <div className="h-28 w-28 md:h-fit md:w-fit rounded-full bg-slate-400 ">
-                           <img alt="" src={ImageProfile} />
-                        </div>
-                        <div>{userInfo?.user_email}</div>
-                        <div className="w-5/6 p-2">
-                           <span>First Name</span>
-                           <input value={userInfo.user_fname}
-                              onChange={e => setUserInfo(current => {
-                                 return {
-                                    ...current, user_fname: e.target.value
-                                 }
-                              })}
-                              className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
-                        </div>
-                        <div className="w-5/6 p-2">
-                           <span>Last Name</span>
-                           <input value={userInfo.user_lname}
-                              onChange={e => setUserInfo(current => {
-                                 return {
-                                    ...current, user_lname: e.target.value
-                                 }
-                              })}
-                              className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
-                        </div>
-                        {/* password */}
-                        <div className={`${!changePass && "hidden"} " w-5/6 p-2"`}>
-                           <span>Password</span>
-                           <input placeholder="*********" type="password"
-                              onChange={e => setUserInfo(current => {
-                                 return {
-                                    ...current, user_pass: e.target.value
-                                 }
-                              })}
-                              className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
-                        </div>
-                        <div className={`${!changePass && "hidden"} " w-5/6 p-2"`}>
-                           <span>confirm Password</span>
-                           <input placeholder="*********" type="password"
-                              onChange={e => setUserInfo(current => {
-                                 return {
-                                    ...current, confirm_pass: e.target.value
-                                 }
-                              })}
-                              className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
-                        </div>
+                     <div className="h-5/6 overflow-y-auto">
+                        <div className="flex flex-col justify-center items-center ">
+                           {/* err message */}
+                           <div className={`${errMsg === "" ? "hidden" : "flex justify-center w-full"}`}>
+                              <span className="text-red-600 bg-red-100 w-4/5 flex justify-center rounded py-2 px-5">{errMsg}</span>
+                           </div>
+                           <div className="h-28 w-28 md:h-fit md:w-fit rounded-full bg-slate-400 ">
+                              <img alt="" src={ImageProfile} />
+                           </div>
+                           <div>{userInfo?.user_email}</div>
+                           <div className="w-5/6 p-2">
+                              <span>First Name</span>
+                              <input value={userInfo.user_fname}
+                                 onChange={e => setUserInfo(current => {
+                                    return {
+                                       ...current, user_fname: e.target.value
+                                    }
+                                 })}
+                                 className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
+                           </div>
+                           <div className="w-5/6 p-2">
+                              <span>Last Name</span>
+                              <input value={userInfo.user_lname}
+                                 onChange={e => setUserInfo(current => {
+                                    return {
+                                       ...current, user_lname: e.target.value
+                                    }
+                                 })}
+                                 className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
+                           </div>
+                           {/* password */}
+                           <div className={`${!changePass && "hidden"} " w-5/6 p-2"`}>
+                              <span>Password</span>
+                              <input placeholder="*********" type="password"
+                                 onChange={e => setUserInfo(current => {
+                                    return {
+                                       ...current, user_pass: e.target.value
+                                    }
+                                 })}
+                                 className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
+                           </div>
+                           <div className={`${!changePass && "hidden"} " w-5/6 p-2"`}>
+                              <span>confirm Password</span>
+                              <input placeholder="*********" type="password"
+                                 onChange={e => setUserInfo(current => {
+                                    return {
+                                       ...current, confirm_pass: e.target.value
+                                    }
+                                 })}
+                                 className="py-2 px-4 w-full h-10 rounded-full bottom-2 border focus:outline-none focus:border-blue-600 focus:ring-blue-600 focus:ring-1" />
+                           </div>
 
-                        <div onClick={handleChangeEdit} className="mt-3 text-blue-600 bg-blue-50 rounded-full py-2 px-4 cursor-pointer">
-                           <span className={`${changePass && "hidden"}`}>Change Password?</span>
-                           <span className={`${!changePass && "hidden"}`}>No Change</span>
+                           <div onClick={handleChangeEdit} className="mt-3 text-blue-600 bg-blue-50 rounded-full py-2 px-4 cursor-pointer">
+                              <span className={`${changePass && "hidden"}`}>Change Password?</span>
+                              <span className={`${!changePass && "hidden"}`}>No Change</span>
+                           </div>
                         </div>
                      </div>
                   </div>
                </div>
             </div>
          </div>
+
       </>
    )
 }

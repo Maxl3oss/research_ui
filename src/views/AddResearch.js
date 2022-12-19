@@ -33,13 +33,19 @@ const AddResearch = () => {
 
    const handleImage = (e) => {
       let file_image = e.target.files[0];
+
       if (file_image.type.startsWith('image/')) {
+         const reader = new FileReader();
          setImageSrc(URL.createObjectURL(file_image));
-         setResearchFiles(current => {
-            return {
-               ...current, image: file_image
-            }
-         });
+
+         reader.onloadend = () => {
+            setResearchFiles(current => {
+               return {
+                  ...current, image: reader.result
+               }
+            });
+         };
+         reader.readAsDataURL(file_image);
       } else {
          setErrMsg("Invalid file type(image)");
       }
@@ -48,11 +54,17 @@ const AddResearch = () => {
    const handleFile = (e) => {
       let file_pdf = e.target.files[0];
       if (file_pdf.type === 'application/pdf') {
-         setResearchFiles(current => {
-            return {
-               ...current, pdf: file_pdf
-            }
-         });
+         const reader = new FileReader();
+
+         reader.onloadend = () => {
+            setResearchFiles(current => {
+               return {
+                  ...current, pdf: reader.result
+               }
+            });
+         };
+         reader.readAsDataURL(file_pdf);
+
       } else {
          document.getElementById("formFilePDF").value = "";
          setErrMsg("Invalid file type(pdf)");
@@ -69,30 +81,21 @@ const AddResearch = () => {
 
    const validateForm = () => {
       // check image size on submit
-      // const MIN_FILE_SIZE = 1024 // 1MB
-      const MAX_FILE_SIZE = 5120 // 5MB
-      const fileSizeKiloBytes = researchFiles.image.size / 1024;
-
+      const MAX_FILE_SIZE = 2048 // 5MB
+      const stringLength = (researchFiles.image.length - 'data:image/png;base64,'.length)
+      const fileSizeKiloBytes = (4 * Math.ceil((stringLength / 3)) * 0.5624896334383812) / 1024;
       if (!researchFiles.image && !researchFiles.pdf) {
          setErrMsg("Please choose a file(image & pdf)");
          setIsSuccess(false);
          return
       }
-
-      // if (fileSizeKiloBytes < MIN_FILE_SIZE) {
-      //    setErrMsg("File(image) size is less than minimum limit");
-      //    setIsSuccess(false);
-      //    return
-      // }
       if (fileSizeKiloBytes > MAX_FILE_SIZE) {
-         setErrMsg("File(image) size is greater than maximum limit(5mb)");
+         setErrMsg("File(image) size is greater than maximum limit(2mb)");
          setIsSuccess(false);
          return
       }
       // check form
       if (checkProperties(research) || checkProperties(researchFiles)) {
-         // console.log(research);
-         // console.log(researchFiles);
          setErrMsg("Please complete this form");
          setIsSuccess(false);
          return
@@ -160,7 +163,7 @@ const AddResearch = () => {
             }
          }
       }
-   }, [isSuccess]);
+   }, [isSuccess, navigate, research, researchFiles]);
 
    useEffect(() => {
       if (JSON.parse(localStorage.getItem("user"))) {

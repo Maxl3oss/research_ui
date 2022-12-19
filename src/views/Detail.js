@@ -3,9 +3,10 @@ import { useLocation } from 'react-router-dom';
 import Layout from "layouts/FrontendLayout";
 import { useNavigate } from "react-router-dom";
 import axios from "services/axios";
+import axios2 from "axios";
 import moment from "moment";
 import Swal from "sweetalert2";
-import { BASE_URL } from "services/axios";
+import fileDownload from "js-file-download";
 // image
 import noImage from "images/NoImage.gif";
 
@@ -46,16 +47,14 @@ const Detail = () => {
       window.scrollTo(0, 0);
    }, [])
 
-   const onClickFileDownload = async (fileID, fileName) => {
+   const onClickFileDownload = async (URL, fileName) => {
       // console.log("Click ", fileID);
       try {
-         await axios({
+         await axios2({
             method: "get",
-            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
-            url: `research/file/${fileID}/download`,
+            url: `${URL}`,
             responseType: "blob"
          }).then((res) => {
-            // console.log(res.data);
             // download file pdf
             const blob = new Blob([res.data], { type: 'application/pdf' });
             const link = document.createElement('a');
@@ -106,7 +105,7 @@ const Detail = () => {
                   <div key={key}>
 
                      <div className="flex justify-center items-center">
-                        <img alt="" className="max-h-screen mb-3" src={item.image ? BASE_URL + item.image : noImage} />
+                        <img alt="" className="max-h-screen mb-3" src={item.image ? item.image : noImage} />
                      </div>
                      <hr className="mb-3" />
 
@@ -206,9 +205,9 @@ const Detail = () => {
                            Document
                         </div>
                         <button
-                           onClick={() => item.file_pdf && onClickFileDownload(item.file_id, item.file_pdf)}
+                           onClick={() => item.file_pdf && onClickFileDownload(item.file_pdf, item.file_pdf.split("/").slice(-1)[0])}
                            className={(item.file_pdf ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-words text-sm text-slate-800"}>
-                           {item.file_pdf ? item.file_pdf : "No File!"}
+                           {item.file_pdf ? item.file_pdf.split("/").slice(-1)[0] : "No File!"}
                            <div className="ml-3">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
                                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

@@ -4,7 +4,6 @@ import Layout from "layouts/FrontendLayout";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "services/axios";
 import Swal from "sweetalert2";
 // image
 import noImage from "images/NoImage.gif";
@@ -132,7 +131,7 @@ const MyResearch = () => {
    return (
       <>
          <div className={`${loading && "h-screen"}`}>
-            <div className="md:flex-row flex flex-col w-full">
+            <div className="md:flex-row flex flex-col w-full mb-20">
                <div className="md:mt-3 flex flex-col items-center w-full">
                   {loading && (
                      <div className="flex mt-5 items-center text-center ">
@@ -175,7 +174,7 @@ const MyResearch = () => {
                               </div>
                               <div className="md:flex mt-4 mb-6 ">
                                  <div className="md:w-2/6 flex justify-center items-center">
-                                    <img alt="" className="object-cover max-h-56 w-full" src={item.image ? BASE_URL + item.image : noImage} />
+                                    <img alt="" className="object-cover max-h-56 w-full" src={item.image ? item.image : noImage} />
                                  </div>
 
                                  <div className="md:ml-3 mt-5 md:mt-0 w-full">
@@ -191,7 +190,7 @@ const MyResearch = () => {
                                        </span>
                                     </div>
 
-                                    <div className="lg:absolute md:bottom-5 flex items-center  mt-5">
+                                    <div className="md:absolute md:bottom-5 flex items-center  mt-5">
                                        <div className="flex space-x-4 justify-around md:space-x-8">
                                           <button onClick={() => onClickDetail(item.id)} className="text-xs md:text-sm bg-indigo-100 text-indigo-600 p-2 rounded-full">
                                              Detail
