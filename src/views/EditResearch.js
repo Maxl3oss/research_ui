@@ -146,7 +146,7 @@ const EditResearch = () => {
             }
          }
       }
-   }, [isSuccess]);
+   }, [isSuccess, research, navigate, researchFiles]);
 
    const onClickDeletePdf = () => {
       setResearchFiles(current => {

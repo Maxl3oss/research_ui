@@ -6,7 +6,6 @@ import axios from "services/axios";
 import axios2 from "axios";
 import moment from "moment";
 import Swal from "sweetalert2";
-import fileDownload from "js-file-download";
 // image
 import noImage from "images/NoImage.gif";
 

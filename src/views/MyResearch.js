@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "services/axios";
-import Layout from "layouts/FrontendLayout";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
