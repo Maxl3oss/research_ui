@@ -5,11 +5,11 @@ import axios from "services/axios";
 import axios2 from "axios";
 import moment from "moment";
 import Swal from "sweetalert2";
-import Layout from "layouts/FrontendLayout";
+import Layout from "layouts/BackendLayout";
 // image
 import noImage from "images/NoImage.gif";
 
-const Detail = () => {
+const BackDetail = () => {
    const location = useLocation();
    const navigate = useNavigate();
    const [id, setId] = useState();
@@ -20,7 +20,7 @@ const Detail = () => {
          setId(location.state.id);
       } catch (err) {
          console.log(err);
-         navigate("/");
+         navigate("/backend/research");
       }
    }, [navigate]);
 
@@ -99,9 +99,9 @@ const Detail = () => {
    return (
       <Layout>
          <div className="min-h-screen md:pt-5 md:px-5 flex justify-center items-start">
-            <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full bg-white shadow-md  rounded-xl">
+            <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full shadow-md  rounded-xl">
                {items.map((item, key) => (
-                  <div key={key}>
+                  <div className="text-slate-50" key={key}>
 
                      <div className="flex justify-center items-center">
                         <img alt="" className="max-h-[300px] mb-3" src={item.image ? item.image : noImage} />
@@ -112,7 +112,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            title
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm text-slate-800">
+                        <div className="flex-initial md:w-4/5 block break-words text-sm">
                            {item.title}
                         </div>
                      </div>
@@ -121,7 +121,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Title Alternative
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm text-slate-800">
+                        <div className="flex-initial md:w-4/5 block break-words text-sm">
                            {item.title_alternative}
                         </div>
                      </div>
@@ -130,7 +130,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Creator
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-words text-sm">
                            {item.creator}
                         </div>
                      </div>
@@ -139,7 +139,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Subject
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-words text-sm">
                            {item.subject}
                         </div>
                      </div>
@@ -148,7 +148,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12">
                            Description
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm text-slate-800">
+                        <div className="flex-initial md:w-4/5 block break-words text-sm">
                            {item.description}
                         </div>
                      </div>
@@ -157,7 +157,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Publisher
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-words text-sm">
                            {item.publisher}
                         </div>
                      </div>
@@ -166,7 +166,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Contributor
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-words text-sm">
                            {item.contributor}
                         </div>
                      </div>
@@ -175,7 +175,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Date
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-words text-sm">
                            {moment(item.date).add(543, 'year').format('LLLL')}
                         </div>
                      </div>
@@ -184,7 +184,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Source
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-words text-sm">
                            {item.source}
                         </div>
                      </div>
@@ -193,7 +193,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Rights
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-words text-sm">
                            {item.rights}
                         </div>
                      </div>
@@ -205,7 +205,7 @@ const Detail = () => {
                         </div>
                         <button
                            onClick={() => item.file_pdf && onClickFileDownload(item.file_pdf, item.file_pdf.split("/").slice(-1)[0])}
-                           className={(item.file_pdf ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-words text-sm text-slate-800"}>
+                           className={(item.file_pdf ? "text-green-900 bg-green-400 rounded-full " : "text-red-900 bg-red-400 rounded-full ") + "flex px-2 py-1 cursor-pointer break-words text-sm"}>
                            {item.file_pdf ? item.file_pdf.split("/").slice(-1)[0] : "No File!"}
                            <div className="ml-3">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
@@ -222,4 +222,4 @@ const Detail = () => {
    )
 };
 
-export default Detail;
+export default BackDetail;

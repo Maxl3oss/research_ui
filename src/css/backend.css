@@ -1,0 +1,22 @@
+.bg-dark {
+   background-color: #020202;
+   color: white;
+}
+.bg-dark-detail {
+   background-color: #020202;
+}
+
+
+.nav {
+   display: flex;
+   align-items: center;
+   height: 80px;
+}
+
+.bg-card{
+   background: #141414;
+}
+
+Link:hover{
+   color: #141414;
+}

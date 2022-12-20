@@ -160,10 +160,10 @@ const Profile = () => {
                      <div className={`${userInfo?.role_id === 2 && "bg-green-50 text-green-600"} + ${userInfo?.role_id === 1 && "bg-blue-50 text-blue-600"} +" px-2 text-sm rounded-full"`}>
                         {userInfo?.role_id === 2 && "User"}{userInfo?.role_id === 1 && "Admin"}
                      </div>
-                     <div className="text-sm md:text-2xl">
+                     <div className="mt-2 text-sm md:text-2xl">
                         {userInfo?.user_fname} {userInfo?.user_lname}
                      </div>
-                     <div className="">
+                     <div>
                         {userInfo?.user_email}
                      </div>
                   </div>

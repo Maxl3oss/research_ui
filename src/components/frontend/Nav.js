@@ -3,6 +3,8 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import axios from 'services/axios';
 import Swal from 'sweetalert2';
+// icon
+import icon from 'images/iconscout_logo.ico';
 
 export default function Nav() {
    const navigate = useNavigate();
@@ -66,7 +68,7 @@ export default function Nav() {
          <div className="container flex items-center justify-around mx-auto">
             {/* logo */}
             <div onClick={() => navigate("/")} className="flex justify-start cursor-pointer">
-               <img src="https://flowbite.com/docs/images/logo.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
+               <img src={icon} className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
                <span className="self-center md:text-xl font-semibold whitespace-nowrap dark:text-white">
                   Research
                </span>
