@@ -2,6 +2,8 @@ import React from 'react';
 import Sidebar from 'components/backend/Sidebar';
 import Nav from 'components/backend/Nav';
 import "css/backend.css";
+import Menubar from 'components/backend/Menubar';
+
 
 const BackendLayout = ({ children }) => {
    return (
@@ -11,6 +13,7 @@ const BackendLayout = ({ children }) => {
             <Nav />
             {children}
          </div>
+         <Menubar />
       </div>
    )
 }

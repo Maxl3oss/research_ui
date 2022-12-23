@@ -96,6 +96,10 @@ const BackDetail = () => {
       }
    }
 
+   useEffect(() => {
+      window.scrollTo(0, 0);
+   }, []);
+
    return (
       <Layout>
          <div className="min-h-screen md:pt-5 md:px-5 flex justify-center items-start">
