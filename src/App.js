@@ -13,6 +13,7 @@ import Dashboard from 'views/Dashboard';
 import BackResearch from 'views/BackResearch';
 import BackDetail from 'views/BackDetail';
 import BackEditResearch from 'views/BackEditResearch';
+import BackUsers from 'views/BackUsers';
 // import MyResearch from 'views/MyResearch';
 import EditResearch from 'views/EditResearch';
 import Profile from 'views/Profile';
@@ -35,6 +36,7 @@ function App() {
 
             <Route path="/backend" element={<Dashboard />} />
             <Route path="/backend/research" element={<BackResearch />} />
+            <Route path="/backend/users" element={<BackUsers />} />
             <Route path="/backend/detail" element={<BackDetail />} />
             <Route path="/backend/editResearch" element={<BackEditResearch />} />
             <Route path="*" element={<NoPage />} />

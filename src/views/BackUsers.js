@@ -3,23 +3,13 @@ import Layout from 'layouts/BackendLayout';
 import axios from 'services/axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
-import ReactPaginate from "react-paginate";
-import moment, { months } from 'moment';
 import { ResearchContext } from "context/ResearchProvider";
 
-const BackResearch = () => {
-   const [researchInfo, setResearchInfo] = useState();
+const BackUsers = () => {
+   const [usersInfo, setUsersInfo] = useState();
    const [loading, setLoading] = useState(false);
    const navigate = useNavigate();
    const context = useContext(ResearchContext);
-   const [page, setPage] = useState(1);
-   const [perPage] = useState(10);
-   const [totalPage, setTotalPage] = useState("");
-
-   const handlePageClick = (event) => {
-      window.scroll(0, 0);
-      setPage(event.selected + 1);
-   };
 
    const handleDelete = async (id) => {
       try {
@@ -64,14 +54,6 @@ const BackResearch = () => {
       navigate("/backend/editResearch");
    }
 
-   const onClickDetail = (id) => {
-      navigate("/backend/detail", {
-         state: {
-            id: id,
-         },
-      });
-   };
-
    const onClickIsVerified = (id, verified) => {
       if (verified === 0) {
          try {
@@ -108,37 +90,6 @@ const BackResearch = () => {
             console.log(err);
          }
       }
-      if (verified === 1) {
-         Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to un confirm this research?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#2563eb',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, un confirm it!'
-         }).then(async (result) => {
-            if (result.isConfirmed) {
-               await axios({
-                  url: `/research/unVerified`,
-                  method: "post",
-                  headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
-                  data: {
-                     research_id: id
-                  }
-               }).then((res) => {
-                  Swal.fire({
-                     position: 'center',
-                     icon: 'success',
-                     text: 'This research has been confirmed',
-                     showConfirmButton: false,
-                     timer: 1000
-                  });
-               });
-               getResearch();
-            }
-         })
-      }
    }
 
    const getResearch = async () => {
@@ -146,12 +97,11 @@ const BackResearch = () => {
          setLoading(true);
          await axios({
             method: "get",
-            url: `/backend/getResearch?page=${page}&per_page=${perPage}`,
+            url: "/backend/getResearch",
             headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
          }).then((res) => {
-            setLoading(false);
-            setTotalPage(res.data.total_pages);
-            setResearchInfo(res.data.data);
+            setLoading(false)
+            setUsersInfo(res.data.data)
          })
       } catch (err) {
          if (err.response?.status === 401) {
@@ -169,16 +119,18 @@ const BackResearch = () => {
 
    useEffect(() => {
       const getResearch = async () => {
-         setLoading(true)
-         await axios({
-            method: "get",
-            url: `/backend/getResearch?page=${page}&per_page=${perPage}`,
-            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
-         }).then((res) => {
-            setLoading(false);
-            setTotalPage(res.data.total_pages);
-            setResearchInfo(res.data.data)
-         }).catch((err) => {
+         try {
+            setLoading(true)
+            await axios({
+               method: "get",
+               url: "/backend/getUsers",
+               headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
+            }).then((res) => {
+               // console.log(res);
+               setLoading(false);
+               setUsersInfo(res.data.data)
+            })
+         } catch (err) {
             if (err.response?.status === 401) {
                setLoading(false);
                Swal.fire({
@@ -189,10 +141,10 @@ const BackResearch = () => {
                   navigate("/");
                });
             }
-         })
+         }
       }
       getResearch();
-   }, [navigate, page, perPage])
+   }, [navigate])
 
    useEffect(() => {
       window.scrollTo(0, 0);
@@ -226,39 +178,33 @@ const BackResearch = () => {
                   </div>
                </div>
             )}
-            {researchInfo && (
-               <table className="w-full text-left table-auto">
+            {usersInfo && (
+               <table className="w-full text-left">
                   <thead>
                      <tr className="text-gray-400">
                         <th className="p-5">NO.</th>
                         <th className="p-5">RESEARCH</th>
-                        <th className="p-5">DATE</th>
                         <th className="p-5">USER</th>
+                        <th className="p-5">ROLE</th>
                         <th className="p-5">STATUS</th>
                         <th className="p-5">ACTIONS</th>
                      </tr>
                   </thead>
                   <tbody className="md:text-base text-sm">
-                     {researchInfo.map((item, key) => (
+                     {usersInfo.map((item, key) => (
                         <tr className="border border-gray-400" key={key}>
                            <td>
                               <div className="flex items-center p-5">
-                                 <span className="ml-1">{item.id}</span>
+                                 <span className="ml-1">{item.user_id}</span>
                               </div>
                            </td>
                            <td>
                               <div className="flex items-center p-5">
                                  <span className="ml-1 break-all">
-                                    {item.title.length > 50
-                                       ? `${item.title.substring(0, 50)} ...` : item.title
+                                    {item.user_email.length > 50
+                                       ? `${item.user_email.substring(0, 50)} ...` : item.user_email
                                     }
                                  </span>
-                              </div>
-                           </td>
-                           <td>
-                              {/* {moment(item.date, "YYYYMMDD HH:mm:ss").fromNow()} */}
-                              <div className="p-5">
-                                 {moment(item.date).format("L")}
                               </div>
                            </td>
                            <td>
@@ -267,30 +213,29 @@ const BackResearch = () => {
                               </div>
                            </td>
                            <td className="p-5 whitespace-nowrap">
-                              <div onClick={() => onClickIsVerified(item.id, item.isVerified)}
+                              <div onClick={() => onClickIsVerified(item.role_id, item.isVerified)}
+                                 className={`${item.role_id === 2 ? "text-blue-600 bg-blue-100" : "text-red-600 bg-red-100"} cursor-pointer rounded-full w-fit px-2`}>
+                                 {item.role_id === 1 ? "Admin" : "User"}
+                              </div>
+                           </td>
+                           <td className="p-5 whitespace-nowrap">
+                              <div onClick={() => onClickIsVerified(item.user_id, item.isVerified)}
                                  className={`${item.isVerified === 1 ? "text-green-50 bg-green-600" : "text-red-50 bg-red-600"} cursor-pointer rounded-full w-fit px-2`}>
                                  {item.isVerified === 1 ? "Verified" : "Not Verified"}
                               </div>
                            </td>
                            <td className="p-5 whitespace-nowrap">
                               <div className="flex justify-between md:justify-start">
-                                 {/* detail */}
-                                 <button onClick={() => onClickDetail(item.id)}>
-                                    <svg className="w-6 h-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                 </button>
                                  <div className="ml-1"></div>
                                  {/* edit */}
-                                 <button onClick={() => handleEdit(item.id)}>
+                                 <button onClick={() => handleEdit(item.user_id)}>
                                     <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                                     </svg>
                                  </button>
                                  {/* delete */}
                                  <div className="ml-1"></div>
-                                 <button onClick={() => handleDelete(item.id)}>
+                                 <button onClick={() => handleDelete(item.user_id)}>
                                     <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                     </svg>
@@ -303,26 +248,8 @@ const BackResearch = () => {
                </table>
             )}
          </div>
-         {totalPage && (
-            <div className={`${loading && "invisible"}`}>
-               <ReactPaginate
-                  className="mt-5 flex justify-center items-center list-none mb-20 md:mb-0 gap-1"
-                  breakLabel="..."
-                  nextLabel="->"
-                  onPageChange={handlePageClick}
-                  pageRangeDisplayed={3}
-                  pageCount={totalPage}
-                  previousLabel="<-"
-                  renderOnZeroPageCount={null}
-                  pageLinkClassName="page-num"
-                  previousClassName="page-num"
-                  nextLinkClassName="page-num"
-                  activeClassName="active"
-               />
-            </div>
-         )}
       </Layout>
    )
 }
 
-export default BackResearch;
+export default BackUsers;

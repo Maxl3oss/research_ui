@@ -117,29 +117,24 @@ const AddResearch = () => {
          formData.append("info", JSON.stringify(research));
          // console.log(...formData);
          setLoading(true);
-         try {
-            axios({
-               url: "research/post",
-               headers: {
-                  Authorization: localStorage.getItem('token').split(/["]/g).join(""),
-               },
-               method: "post",
-               data: formData
-            }).then((res) => {
-               // console.log(res);
-               setLoading(false);
-               Swal.fire({
-                  position: 'center',
-                  icon: 'success',
-                  text: 'Save your research.',
-                  showConfirmButton: false,
-                  timer: 1000
-               });
-               navigate("/profile");
-            })
-         } catch (err) {
+         axios({
+            url: "research/post",
+            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
+            method: "post",
+            data: formData
+         }).then(() => {
+            // console.log(res);
             setLoading(false);
-            // console.log(err.response);
+            Swal.fire({
+               position: 'center',
+               icon: 'success',
+               text: 'Save your research.',
+               showConfirmButton: false,
+               timer: 1000
+            });
+            navigate("/profile");
+         }).catch((err) => {
+            setLoading(false);
             if (err.response?.status === 403) {
                Swal.fire({
                   icon: 'warning',
@@ -161,7 +156,7 @@ const AddResearch = () => {
                   navigate("/signIn");
                });
             }
-         }
+         })
       }
    }, [isSuccess, navigate, research, researchFiles]);
 

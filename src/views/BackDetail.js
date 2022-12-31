@@ -82,16 +82,6 @@ const BackDetail = () => {
                localStorage.removeItem("token");
                navigate("/signIn");
             });
-         } else if (!localStorage.getItem('token')) {
-            Swal.fire({
-               icon: 'warning',
-               text: 'Please sign in!',
-               confirmButtonColor: "rgb(29 78 216)",
-            }).then(() => {
-               localStorage.removeItem("user");
-               localStorage.removeItem("token");
-               navigate("/signIn");
-            });
          }
       }
    }

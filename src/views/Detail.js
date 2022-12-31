@@ -48,7 +48,18 @@ const Detail = () => {
 
    const onClickFileDownload = async (URL, fileName) => {
       // console.log("Click ", fileID);
-      try {
+      if (!localStorage.getItem('token')) {
+         return Swal.fire({
+            icon: 'warning',
+            text: 'Please sign in!',
+            confirmButtonColor: "rgb(29 78 216)",
+         })
+      }
+      await axios({
+         method: "get",
+         headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
+         url: "/research/download",
+      }).then(async (res) => {
          await axios2({
             method: "get",
             url: `${URL}`,
@@ -60,8 +71,8 @@ const Detail = () => {
             link.href = window.URL.createObjectURL(blob);
             link.download = `${fileName}`;
             link.click();
-         });
-      } catch (err) {
+         })
+      }).catch((err) => {
          if (err.response?.status === 403) {
             Swal.fire({
                icon: 'warning',
@@ -82,18 +93,8 @@ const Detail = () => {
                localStorage.removeItem("token");
                navigate("/signIn");
             });
-         } else if (!localStorage.getItem('token')) {
-            Swal.fire({
-               icon: 'warning',
-               text: 'Please sign in!',
-               confirmButtonColor: "rgb(29 78 216)",
-            }).then(() => {
-               localStorage.removeItem("user");
-               localStorage.removeItem("token");
-               navigate("/signIn");
-            });
          }
-      }
+      })
    }
 
    return (

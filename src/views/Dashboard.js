@@ -31,6 +31,16 @@ const Dashboard = () => {
                }).then(() => {
                   navigate("/");
                });
+            } else if (err.response?.status === 403) {
+               Swal.fire({
+                  icon: 'warning',
+                  text: 'Token time out!',
+                  confirmButtonColor: "rgb(29 78 216)",
+               }).then(() => {
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("token");
+                  navigate("/signIn");
+               });
             }
          }
       };
