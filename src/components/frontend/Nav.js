@@ -5,12 +5,14 @@ import axios from 'services/axios';
 import Swal from 'sweetalert2';
 // icon
 import icon from 'images/iconscout_logo.ico';
+import { AuthContext } from "context/AuthProvider";
 
 export default function Nav() {
    const navigate = useNavigate();
    const typeFilter = ['all', 'creator', 'title', 'description', 'subject', 'rights'];
    const [popOverShow, setPopOverShow] = useState(false);
    const context = useContext(SearchContext);
+
    let { user_email } = {};
 
    localStorage.getItem("user") ? { user_email } = JSON.parse(localStorage.getItem("user")) : { user_email } = false;

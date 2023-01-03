@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import axios from 'services/axios';
 import Swal from "sweetalert2";
+import { AuthContext } from 'context/AuthProvider';
 
 export default function SignIn() {
    const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function SignIn() {
    const [remember, setRemember] = useState();
    const [pass, setPass] = useState("");
    const [errMsg, setErrMsg] = useState("");
+   const context = useContext(AuthContext);
 
    const onSubmit = async (e) => {
       e.preventDefault();
@@ -38,6 +40,8 @@ export default function SignIn() {
             });
             onClickRemember();
             if (remember) localStorage.setItem('remember', JSON.stringify({ email: email, pass: pass, remember: true }));
+            // update context
+            context.update();
             navigate("/");
          }
       }).catch((err) => {

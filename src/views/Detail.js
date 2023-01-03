@@ -113,7 +113,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            title
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm text-slate-800">
+                        <div className="flex-initial md:w-4/5 block break-all text-sm text-slate-800">
                            {item.title}
                         </div>
                      </div>
@@ -122,7 +122,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Title Alternative
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm text-slate-800">
+                        <div className="flex-initial md:w-4/5 block break-all text-sm text-slate-800">
                            {item.title_alternative}
                         </div>
                      </div>
@@ -131,7 +131,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Creator
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-all text-sm text-slate-800">
                            {item.creator}
                         </div>
                      </div>
@@ -140,7 +140,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Subject
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-all text-sm text-slate-800">
                            {item.subject}
                         </div>
                      </div>
@@ -149,7 +149,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12">
                            Description
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm text-slate-800">
+                        <div className="flex-initial md:w-4/5 block break-all text-sm text-slate-800">
                            {item.description}
                         </div>
                      </div>
@@ -158,7 +158,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Publisher
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-all text-sm text-slate-800">
                            {item.publisher}
                         </div>
                      </div>
@@ -167,7 +167,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Contributor
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-all text-sm text-slate-800">
                            {item.contributor}
                         </div>
                      </div>
@@ -176,7 +176,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Date
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-all text-sm text-slate-800">
                            {moment(item.date).add(543, 'year').format('LLLL')}
                         </div>
                      </div>
@@ -185,7 +185,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Source
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-all text-sm text-slate-800">
                            {item.source}
                         </div>
                      </div>
@@ -194,7 +194,7 @@ const Detail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Rights
                         </div>
-                        <div className="block break-words text-sm text-slate-800">
+                        <div className="block break-all text-sm text-slate-800">
                            {item.rights}
                         </div>
                      </div>
@@ -206,7 +206,7 @@ const Detail = () => {
                         </div>
                         <button
                            onClick={() => item.file_pdf && onClickFileDownload(item.file_pdf, item.file_pdf.split("/").slice(-1)[0])}
-                           className={(item.file_pdf ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-words text-sm text-slate-800"}>
+                           className={(item.file_pdf ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-all text-sm text-slate-800"}>
                            {item.file_pdf ? item.file_pdf.split("/").slice(-1)[0] : "No File!"}
                            <div className="ml-3">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">

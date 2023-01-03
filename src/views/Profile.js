@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from "layouts/FrontendLayout";
 import MyResearch from "./MyResearch";
 import ImageProfile from "images/Profile.jpg";
 import axios from "services/axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+// context
+import { AuthContext } from "context/AuthProvider";
 
 const Profile = () => {
-
+   const context = useContext(AuthContext);
+   const [isSuccess, setIsSuccess] = useState(false);
    const [errMsg, setErrMsg] = useState("");
    const [userInfo, setUserInfo] = useState({
       user_id: "",
@@ -56,10 +59,14 @@ const Profile = () => {
       }
    }
 
-   const submitEditProfile = async () => {
+   const submitEditProfile = async (e) => {
+      e.preventDefault();
       checkFormEditProfile();
-      try {
-         await axios({
+   }
+
+   useEffect(() => {
+      if (errMsg === "" && isSuccess) {
+         axios({
             method: "post",
             headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
             url: "/users/edit",
@@ -81,22 +88,25 @@ const Profile = () => {
                   setShowEdit(false);
                })
             });
-
+            setIsSuccess(false);
+         }).catch((err) => {
+            console.log(err);
          });
-      } catch (err) {
-         console.log(err);
       }
-   }
+   }, [errMsg, isSuccess, userInfo]);
 
    const checkFormEditProfile = () => {
       if (userInfo.user_fname === "" || userInfo.user_lname === "") {
          setErrMsg("Name can’t be blank");
+         setIsSuccess(false);
          return
       }
       if (changePass && userInfo.user_pass !== userInfo.confirm_pass) {
          setErrMsg("Passwords do not match");
+         setIsSuccess(false);
          return
       }
+      setIsSuccess(true);
       setErrMsg("");
    }
 
@@ -114,8 +124,10 @@ const Profile = () => {
    }
 
    useEffect(() => {
-      if (localStorage.getItem("user")) {
-         const Info = JSON.parse(localStorage.getItem("user"));
+      if (context.Profile) {
+         // const Info = JSON.parse(localStorage.getItem("user"));
+         const Info = context.Profile;
+         // console.log(Info.user_id);
          setUserInfo(current => {
             return {
                ...current,
@@ -127,7 +139,7 @@ const Profile = () => {
             }
          });
       }
-   }, []);
+   }, [context]);
 
    useEffect(() => {
       if (showEdit) {
@@ -168,7 +180,7 @@ const Profile = () => {
                      </div>
                   </div>
                   {/* Sign Out */}
-                  <div className="md:hidden flex justify-center items-end text-xs cursor-pointer">
+                  <div className="md:hidden mt-3 flex justify-center items-end text-xs cursor-pointer">
                      <button onClick={signOut} className="ml-2 flex justify-center items-center py-2 pr-4 pl-3 text-red-700 bg-red-50 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />

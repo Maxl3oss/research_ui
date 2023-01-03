@@ -115,13 +115,34 @@ const MyResearch = () => {
                   setTotalPage(res.data.total_pages);
                });
             } catch (err) {
-               console.error(err);
+               // alert(err);
+               if (err.response?.status === 403) {
+                  Swal.fire({
+                     icon: 'warning',
+                     text: 'Token time out!',
+                     confirmButtonColor: "rgb(29 78 216)",
+                  }).then(() => {
+                     localStorage.removeItem("user");
+                     localStorage.removeItem("token");
+                     navigate("/signIn");
+                  });
+               } else if (err.response?.status === 401) {
+                  Swal.fire({
+                     icon: 'warning',
+                     text: 'Token not found',
+                     confirmButtonColor: "rgb(29 78 216)",
+                  }).then(() => {
+                     localStorage.removeItem("user");
+                     localStorage.removeItem("token");
+                     navigate("/signIn");
+                  });
+               }
             }
             setLoading(false);
          }
          getResearch();
       }
-   }, [page, perPage, user_id]);
+   }, [page, perPage, user_id, navigate]);
 
    useEffect(() => {
       window.scrollTo(0, 0);
@@ -177,9 +198,9 @@ const MyResearch = () => {
                                  </div>
 
                                  <div className="md:ml-3 mt-5 md:mt-0 w-full">
-                                    <div className="break-words first-letter:mb-3 font-semibold md:font-medium text-sm md:text-base ">
-                                       {item.title.length > 150
-                                          ? `${item.title.substring(0, 150)} . . .`
+                                    <div className="break-all first-letter:mb-3 font-semibold md:font-medium text-sm md:text-base ">
+                                       {item.title.length > 50
+                                          ? `${item.title.substring(0, 50)} . . .`
                                           : item.title}
                                     </div>
 

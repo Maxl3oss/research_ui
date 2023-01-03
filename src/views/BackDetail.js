@@ -106,7 +106,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            title
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm">
+                        <div className="flex-initial md:w-4/5 block break-all text-sm">
                            {item.title}
                         </div>
                      </div>
@@ -115,7 +115,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Title Alternative
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm">
+                        <div className="flex-initial md:w-4/5 block break-all text-sm">
                            {item.title_alternative}
                         </div>
                      </div>
@@ -124,7 +124,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Creator
                         </div>
-                        <div className="block break-words text-sm">
+                        <div className="block break-all text-sm">
                            {item.creator}
                         </div>
                      </div>
@@ -133,7 +133,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Subject
                         </div>
-                        <div className="block break-words text-sm">
+                        <div className="block break-all text-sm">
                            {item.subject}
                         </div>
                      </div>
@@ -142,7 +142,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12">
                            Description
                         </div>
-                        <div className="flex-initial md:w-4/5 block break-words text-sm">
+                        <div className="flex-initial md:w-4/5 block break-all text-sm">
                            {item.description}
                         </div>
                      </div>
@@ -151,7 +151,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Publisher
                         </div>
-                        <div className="block break-words text-sm">
+                        <div className="block break-all text-sm">
                            {item.publisher}
                         </div>
                      </div>
@@ -160,7 +160,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Contributor
                         </div>
-                        <div className="block break-words text-sm">
+                        <div className="block break-all text-sm">
                            {item.contributor}
                         </div>
                      </div>
@@ -169,7 +169,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Date
                         </div>
-                        <div className="block break-words text-sm">
+                        <div className="block break-all text-sm">
                            {moment(item.date).add(543, 'year').format('LLLL')}
                         </div>
                      </div>
@@ -178,7 +178,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Source
                         </div>
-                        <div className="block break-words text-sm">
+                        <div className="block break-all text-sm">
                            {item.source}
                         </div>
                      </div>
@@ -187,7 +187,7 @@ const BackDetail = () => {
                         <div className="text-lg md:w-2/12 ">
                            Rights
                         </div>
-                        <div className="block break-words text-sm">
+                        <div className="block break-all text-sm">
                            {item.rights}
                         </div>
                      </div>
@@ -199,7 +199,7 @@ const BackDetail = () => {
                         </div>
                         <button
                            onClick={() => item.file_pdf && onClickFileDownload(item.file_pdf, item.file_pdf.split("/").slice(-1)[0])}
-                           className={(item.file_pdf ? "text-green-900 bg-green-400 rounded-full " : "text-red-900 bg-red-400 rounded-full ") + "flex px-2 py-1 cursor-pointer break-words text-sm"}>
+                           className={(item.file_pdf ? "text-green-900 bg-green-400 rounded-full " : "text-red-900 bg-red-400 rounded-full ") + "flex px-2 py-1 cursor-pointer break-all text-sm"}>
                            {item.file_pdf ? item.file_pdf.split("/").slice(-1)[0] : "No File!"}
                            <div className="ml-3">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">

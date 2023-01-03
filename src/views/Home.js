@@ -112,17 +112,17 @@ export default function Home() {
                                     <img alt="" className="object-cover max-h-56 w-full" src={item.image ? item.image : noImage} />
                                  </div>
                                  <div className="lg:relative w-full md:ml-3">
-                                    <div className="break-words mt-5 md:mt-0 first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">
+                                    <div className="break-all mt-5 md:mt-0 first-letter:mb-3 font-semibold md:font-medium  text-sm md:text-base ">
                                        {item.title.length > 150
                                           ? `${item.title.substring(0, 150)} . . .`
                                           : item.title}
                                     </div>
-                                    <div className="break-words text-sm text-neutral-600">
+                                    <div className="break-all text-sm text-neutral-600">
                                        {item.description.length > 500
                                           ? `${item.description.substring(0, 500)} . . .`
                                           : item.description}
                                     </div>
-                                    <div className="break-words text-sm font-medium underline">
+                                    <div className="break-all text-sm font-medium underline">
                                        Institute : {item.rights}
                                     </div>
 

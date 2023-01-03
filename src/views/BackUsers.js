@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Layout from 'layouts/BackendLayout';
 import axios from 'services/axios';
 import { useNavigate } from 'react-router-dom';
+import ReactPaginate from "react-paginate";
 import Swal from "sweetalert2";
 import { ResearchContext } from "context/ResearchProvider";
 
@@ -10,6 +11,14 @@ const BackUsers = () => {
    const [loading, setLoading] = useState(false);
    const navigate = useNavigate();
    const context = useContext(ResearchContext);
+   const [page, setPage] = useState(1);
+   const [perPage] = useState(10);
+   const [totalPage, setTotalPage] = useState("");
+
+   const handlePageClick = (event) => {
+      window.scroll(0, 0);
+      setPage(event.selected + 1);
+   };
 
    const handleDelete = async (id) => {
       try {
@@ -23,25 +32,23 @@ const BackUsers = () => {
             confirmButtonText: 'Yes, delete it!'
          }).then(async (result) => {
             if (result.isConfirmed) {
-               const { user_id } = JSON.parse(localStorage.getItem("user"));
                await axios({
-                  url: `/research/del`,
+                  url: `/backend/delUser`,
                   method: "post",
                   headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
                   data: {
-                     user_id: user_id,
-                     research_id: id
+                     user_id: id
                   }
                }).then((res) => {
                   Swal.fire({
                      position: 'center',
                      icon: 'success',
-                     text: 'Your research has been deleted.',
+                     text: 'Your user has been deleted.',
                      showConfirmButton: false,
                      timer: 1000
                   });
                });
-               getResearch();
+               getUsers();
             }
          })
       } catch (err) {
@@ -59,7 +66,7 @@ const BackUsers = () => {
          try {
             Swal.fire({
                title: 'Are you sure?',
-               text: "You want to confirm this research?",
+               text: "You want to confirm this user?",
                icon: 'question',
                showCancelButton: true,
                confirmButtonColor: '#2563eb',
@@ -68,39 +75,71 @@ const BackUsers = () => {
             }).then(async (result) => {
                if (result.isConfirmed) {
                   await axios({
-                     url: `/research/isVerified`,
+                     url: `/backend/verified`,
                      method: "post",
                      headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
                      data: {
-                        research_id: id
+                        user_id: id
                      }
                   }).then((res) => {
                      Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        text: 'This research has been confirmed',
+                        text: 'This user has been confirmed',
                         showConfirmButton: false,
                         timer: 1000
                      });
                   });
-                  getResearch();
+                  getUsers();
                }
             })
          } catch (err) {
             console.log(err);
          }
       }
+      if (verified === 1) {
+         Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to un confirm this user?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, un confirm it!'
+         }).then(async (result) => {
+            if (result.isConfirmed) {
+               await axios({
+                  url: `/backend/unVerified`,
+                  method: "post",
+                  headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
+                  data: {
+                     user_id: id
+                  }
+               }).then((res) => {
+                  Swal.fire({
+                     position: 'center',
+                     icon: 'success',
+                     text: 'This user has been confirmed',
+                     showConfirmButton: false,
+                     timer: 1000
+                  });
+               });
+               getUsers();
+            }
+         })
+      }
    }
 
-   const getResearch = async () => {
+   const getUsers = async () => {
       try {
-         setLoading(true);
+         setLoading(true)
          await axios({
             method: "get",
-            url: "/backend/getResearch",
+            url: `/backend/getUsers?page=${page}&per_page=${perPage}`,
             headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
          }).then((res) => {
-            setLoading(false)
+            // console.log(res);
+            setLoading(false);
             setUsersInfo(res.data.data)
          })
       } catch (err) {
@@ -118,16 +157,17 @@ const BackUsers = () => {
    }
 
    useEffect(() => {
-      const getResearch = async () => {
+      const getUsers = async () => {
          try {
             setLoading(true)
             await axios({
                method: "get",
-               url: "/backend/getUsers",
+               url: `/backend/getUsers?page=${page}&per_page=${perPage}`,
                headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
             }).then((res) => {
                // console.log(res);
                setLoading(false);
+               setTotalPage(res.data.total_pages);
                setUsersInfo(res.data.data)
             })
          } catch (err) {
@@ -143,8 +183,8 @@ const BackUsers = () => {
             }
          }
       }
-      getResearch();
-   }, [navigate])
+      getUsers();
+   }, [navigate, page, perPage])
 
    useEffect(() => {
       window.scrollTo(0, 0);
@@ -152,11 +192,11 @@ const BackUsers = () => {
 
    return (
       <Layout>
-         <div className="px-6 flex md:justify-start justify-center text-3xl font-light mb-5">Research</div>
-         <div className="overflow-x-auto relative shadow-md sm:rounded-lg p-6 pt-0">
+         <div className="md:px-6 flex md:justify-start justify-center text-3xl font-light mb-5">User & Admin</div>
+         <div className="overflow-x-auto relative shadow-md sm:rounded-lg pt-0 lg:pt-0 lg:p-6">
             {/* loading */}
             {loading && (
-               <div className="flex mt-5 items-center justify-center text-center ">
+               <div className="flex mt-5 items-center justify-center text-center">
                   <div role="status">
                      <svg
                         aria-hidden="true"
@@ -213,8 +253,7 @@ const BackUsers = () => {
                               </div>
                            </td>
                            <td className="p-5 whitespace-nowrap">
-                              <div onClick={() => onClickIsVerified(item.role_id, item.isVerified)}
-                                 className={`${item.role_id === 2 ? "text-blue-600 bg-blue-100" : "text-red-600 bg-red-100"} cursor-pointer rounded-full w-fit px-2`}>
+                              <div className={`${item.role_id === 2 ? "text-blue-600 bg-blue-100" : "text-red-600 bg-red-100"} cursor-pointer rounded-full w-fit px-2`}>
                                  {item.role_id === 1 ? "Admin" : "User"}
                               </div>
                            </td>
@@ -248,6 +287,24 @@ const BackUsers = () => {
                </table>
             )}
          </div>
+         {totalPage && (
+            <div className={`${loading && "invisible"}`}>
+               <ReactPaginate
+                  className="mt-5 flex justify-center items-center list-none mb-20 md:mb-0  gap-1"
+                  breakLabel="..."
+                  nextLabel="->"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={3}
+                  pageCount={totalPage}
+                  previousLabel="<-"
+                  renderOnZeroPageCount={null}
+                  pageLinkClassName="page-num"
+                  previousClassName="page-num"
+                  nextLinkClassName="page-num"
+                  activeClassName="active"
+               />
+            </div>
+         )}
       </Layout>
    )
 }

@@ -20,29 +20,33 @@ import Profile from 'views/Profile';
 //provider 
 import SearchContext from 'context/SearchProvider';
 import ResearchContext from 'context/ResearchProvider';
+import AuthContext from 'context/AuthProvider';
+
 function App() {
   return (
     <BrowserRouter>
-      <ResearchContext>
-        <SearchContext>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signIn" element={<SignIn />} />
-            <Route path="/signUp" element={<SignUp />} />
-            <Route path="/detail" element={<Detail />} />
-            <Route path="/addResearch" element={<AddResearch />} />
-            <Route path="/editResearch" element={<EditResearch />} />
-            <Route path="/profile" element={<Profile />} />
+      <AuthContext>
+        <ResearchContext>
+          <SearchContext>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signIn" element={<SignIn />} />
+              <Route path="/signUp" element={<SignUp />} />
+              <Route path="/detail" element={<Detail />} />
+              <Route path="/addResearch" element={<AddResearch />} />
+              <Route path="/editResearch" element={<EditResearch />} />
+              <Route path="/profile" element={<Profile />} />
 
-            <Route path="/backend" element={<Dashboard />} />
-            <Route path="/backend/research" element={<BackResearch />} />
-            <Route path="/backend/users" element={<BackUsers />} />
-            <Route path="/backend/detail" element={<BackDetail />} />
-            <Route path="/backend/editResearch" element={<BackEditResearch />} />
-            <Route path="*" element={<NoPage />} />
-          </Routes>
-        </SearchContext>
-      </ResearchContext>
+              <Route path="/backend" element={<Dashboard />} />
+              <Route path="/backend/research" element={<BackResearch />} />
+              <Route path="/backend/users" element={<BackUsers />} />
+              <Route path="/backend/detail" element={<BackDetail />} />
+              <Route path="/backend/editResearch" element={<BackEditResearch />} />
+              <Route path="*" element={<NoPage />} />
+            </Routes>
+          </SearchContext>
+        </ResearchContext>
+      </AuthContext>
     </BrowserRouter>
   );
 }
