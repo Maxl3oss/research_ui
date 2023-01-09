@@ -1,9 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'services/axios';
+import Swal from 'sweetalert2';
 
 const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
+
+   const navigate = useNavigate();
    const [Profile, setProfile] = useState({
       user_id: null,
       user_fname: null,
@@ -28,12 +32,22 @@ const AuthProvider = ({ children }) => {
                user_email: user.user_email,
                user_role: user.role_id
             });
+         }).catch((err) => {
+            Swal.fire({
+               icon: 'warning',
+               text: err.response.data,
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
+               navigate("/signIn");
+            });
          })
       }
-   }, [])
+   }, [navigate])
 
-   const update = () => {
-      axios({
+   const update = async () => {
+      await axios({
          method: "get",
          url: "/users/profile",
          headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
