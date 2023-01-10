@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
             });
          })
       }
-   }, [navigate])
+   }, [])
 
    const update = async () => {
       await axios({

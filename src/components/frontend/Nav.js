@@ -5,7 +5,6 @@ import axios from 'services/axios';
 import Swal from 'sweetalert2';
 // icon
 import icon from 'images/iconscout_logo.ico';
-import { AuthContext } from "context/AuthProvider";
 
 export default function Nav() {
    const navigate = useNavigate();

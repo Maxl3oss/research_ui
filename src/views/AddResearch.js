@@ -284,7 +284,7 @@ const AddResearch = () => {
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
                      <div className="text-lg md:w-2/12 ">
-                        contributor
+                        Contributor
                      </div>
                      <input
                         onChange={e => setResearch(current => {

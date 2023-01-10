@@ -4,7 +4,7 @@ import axios from 'services/axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
 import ReactPaginate from "react-paginate";
-import moment, { months } from 'moment';
+import moment from 'moment';
 import { ResearchContext } from "context/ResearchProvider";
 
 const BackResearch = () => {
@@ -33,13 +33,11 @@ const BackResearch = () => {
             confirmButtonText: 'Yes, delete it!'
          }).then(async (result) => {
             if (result.isConfirmed) {
-               const { user_id } = JSON.parse(localStorage.getItem("user"));
                await axios({
-                  url: `/research/del`,
+                  url: `/backend/delResearch`,
                   method: "post",
                   headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
                   data: {
-                     user_id: user_id,
                      research_id: id
                   }
                }).then((res) => {

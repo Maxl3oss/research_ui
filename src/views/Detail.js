@@ -22,7 +22,7 @@ const Detail = () => {
          console.log(err);
          navigate("/");
       }
-   }, [navigate]);
+   }, [navigate, location.state.id]);
 
    useEffect(() => {
       if (id) {

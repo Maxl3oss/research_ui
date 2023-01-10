@@ -48,7 +48,7 @@ const Dashboard = () => {
    }, [navigate]);
 
    useEffect(() => {
-      console.log(items);
+      // console.log(items);
       window.scrollTo(0, 0);
    }, [items]);
 

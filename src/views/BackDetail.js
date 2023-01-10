@@ -22,7 +22,7 @@ const BackDetail = () => {
          console.log(err);
          navigate("/backend/research");
       }
-   }, [navigate]);
+   }, [navigate, location.state.id]);
 
    useEffect(() => {
       if (id) {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Profile from 'images/Profile.jpg';
-import logo from 'images/iconscout_logo.ico';
 
 export default function Nav() {
    const [userInfo, setUserInfo] = useState();
