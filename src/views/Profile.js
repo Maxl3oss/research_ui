@@ -193,8 +193,8 @@ const Profile = () => {
                <hr />
                <MyResearch />
             </div>
+         </Layout>
 
-         </Layout >
          {/* edit profile */}
          <div className={`${!showEdit && "hidden"}`} >
             <div className="absolute z-50 top-0 left-0 h-full bg-opacity-50 w-full bg-gray-900">
