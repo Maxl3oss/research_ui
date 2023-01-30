@@ -14,17 +14,17 @@ const AddResearch = () => {
    const [isSuccess, setIsSuccess] = useState(false);
    const [loading, setLoading] = useState(false);
    const [research, setResearch] = useState({
-      user_id: "",
-      title: "test",
-      title_alternative: "test",
-      creator: "test",
-      subject: "test",
-      publisher: "test",
-      contributor: "test",
+      user_id: null,
+      title: null,
+      title_alternative: null,
+      creator: null,
+      subject: null,
+      publisher: null,
+      contributor: null,
       date: localISOTime.slice(0, 19).replace('T', ' '),
       source: "-",
-      rights: "test",
-      description: "test"
+      rights: null,
+      description: null
    });
    const [researchFiles, setResearchFiles] = useState({
       image: null,
@@ -81,14 +81,15 @@ const AddResearch = () => {
 
    const validateForm = () => {
       // check image size on submit
-      const MAX_FILE_SIZE = 2048 // 5MB
-      const stringLength = (researchFiles.image.length - 'data:image/png;base64,'.length)
-      const fileSizeKiloBytes = (4 * Math.ceil((stringLength / 3)) * 0.5624896334383812) / 1024;
       if (!researchFiles.image && !researchFiles.pdf) {
          setErrMsg("Please choose a file(image & pdf)");
          setIsSuccess(false);
          return
       }
+
+      const MAX_FILE_SIZE = 2048 // 5MB
+      const stringLength = (researchFiles.image.length - 'data:image/png;base64,'.length)
+      const fileSizeKiloBytes = (4 * Math.ceil((stringLength / 3)) * 0.5624896334383812) / 1024;
       if (fileSizeKiloBytes > MAX_FILE_SIZE) {
          setErrMsg("File(image) size is greater than maximum limit(2mb)");
          setIsSuccess(false);
