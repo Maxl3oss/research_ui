@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Layout from "layouts/FrontendLayout";
 import axios from "services/axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+// pdf
+import * as pdfjsLib from 'pdfjs-dist'
+import 'pdfjs-dist/build/pdf.worker.entry.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = null; // Set to use fake worker
 
 const AddResearch = () => {
-
    // const { user_id } = JSON.parse(localStorage.getItem("user"));
    const localISOTime = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
    const navigate = useNavigate();
@@ -30,6 +33,36 @@ const AddResearch = () => {
       image: null,
       pdf: null
    });
+
+   const handleExtractImage = async () => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(researchFiles.pdf);
+      fileReader.onload = async () => {
+         const pdfData = new Uint8Array(fileReader.result);
+         const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+         const page = await pdf.getPage(1);
+         const viewport = page.getViewport({ scale: 1 });
+         const canvas = document.createElement('canvas');
+         canvas.style.display = 'none';
+         canvas.width = viewport.width;
+         canvas.height = viewport.height;
+         await page.render({
+            canvasContext: canvas.getContext("2d"),
+            viewport,
+         }).promise;
+         const dataUrl = canvas.toDataURL("image/png");
+
+         canvas.remove();
+
+         setImageSrc(dataUrl)
+         setResearchFiles(current => {
+            return {
+               ...current, image: dataUrl
+            }
+         });
+
+      };
+   };
 
    const handleImage = (e) => {
       let file_image = e.target.files[0];
@@ -59,12 +92,11 @@ const AddResearch = () => {
          reader.onloadend = () => {
             setResearchFiles(current => {
                return {
-                  ...current, pdf: reader.result
+                  ...current, pdf: file_pdf
                }
             });
          };
          reader.readAsDataURL(file_pdf);
-
       } else {
          document.getElementById("formFilePDF").value = "";
          setErrMsg("Invalid file type(pdf)");
@@ -176,6 +208,11 @@ const AddResearch = () => {
    useEffect(() => {
       // console.log(localISOTime.slice(0, 19).replace('T', ' '));
       // console.log(new Date().toISOString().slice(0, 19).replace('T', ' '));
+      // console.log(researchFiles.image);
+      // console.log(imageSrc);
+      if (researchFiles.pdf) {
+         handleExtractImage();
+      }
       setErrMsg("");
    }, [researchFiles, research]);
 

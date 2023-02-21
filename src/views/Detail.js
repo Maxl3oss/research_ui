@@ -100,120 +100,126 @@ const Detail = () => {
    return (
       <Layout>
          <div className="min-h-screen md:pt-5 md:px-5 flex justify-center items-start">
-            <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full bg-white shadow-md  rounded-xl">
+            <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full bg-white drop-shadow-xl  rounded-xl">
                {items.map((item, key) => (
-                  <div key={key}>
+                  <div key={key} className="flex">
 
-                     <div className="flex justify-center items-center">
-                        <img alt="" className="max-h-[300px] mb-3" src={item.image ? item.image : noImage} />
-                     </div>
-                     <hr className="mb-3" />
-
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           title
-                        </div>
-                        <div className="flex-initial md:w-4/5 block break-all text-sm text-slate-800">
-                           {item.title}
-                        </div>
+                     <div className="mr-5 w-fit object-scale-down lg:flex hidden">
+                        <img alt="" className="border " src={item.image ? item.image : noImage} />
                      </div>
 
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Title Alternative
-                        </div>
-                        <div className="flex-initial md:w-4/5 block break-all text-sm text-slate-800">
-                           {item.title_alternative}
-                        </div>
-                     </div>
+                     <div className="lg:w-4/6 w-full">
 
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Creator
+                        <div className="lg:hidden block">
+                           <img alt="" className="border " src={item.image ? item.image : noImage} />
                         </div>
-                        <div className="block break-all text-sm text-slate-800">
-                           {item.creator}
-                        </div>
-                     </div>
 
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Subject
-                        </div>
-                        <div className="block break-all text-sm text-slate-800">
-                           {item.subject}
-                        </div>
-                     </div>
-
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12">
-                           Description
-                        </div>
-                        <div className="flex-initial md:w-4/5 block break-all text-sm text-slate-800">
-                           {item.description}
-                        </div>
-                     </div>
-
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Publisher
-                        </div>
-                        <div className="block break-all text-sm text-slate-800">
-                           {item.publisher}
-                        </div>
-                     </div>
-
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Contributor
-                        </div>
-                        <div className="block break-all text-sm text-slate-800">
-                           {item.contributor}
-                        </div>
-                     </div>
-
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Date
-                        </div>
-                        <div className="block break-all text-sm text-slate-800">
-                           {moment(item.date).add(543, 'year').format('LLLL')}
-                        </div>
-                     </div>
-
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Source
-                        </div>
-                        <div className="block break-all text-sm text-slate-800">
-                           {item.source}
-                        </div>
-                     </div>
-
-                     <div className="flex flex-col mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Rights
-                        </div>
-                        <div className="block break-all text-sm text-slate-800">
-                           {item.rights}
-                        </div>
-                     </div>
-
-                     {/* file pdf download*/}
-                     <div className="flex flex-col mt-1 mb-1 md:flex-row items-start">
-                        <div className="text-lg md:w-2/12 ">
-                           Document
-                        </div>
-                        <button
-                           onClick={() => item.file_pdf && onClickFileDownload(item.file_pdf, item.file_pdf.split("/").slice(-1)[0])}
-                           className={(item.file_pdf ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-all text-sm text-slate-800"}>
-                           {item.file_pdf ? item.file_pdf.split("/").slice(-1)[0] : "No File!"}
-                           <div className="ml-3">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              title
                            </div>
-                        </button>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.title}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Title Alternative
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.title_alternative}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Creator
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.creator}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Subject
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.subject}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Description
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.description}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Publisher
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.publisher}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Contributor
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.contributor}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Date
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {moment(item.date).add(543, 'year').format('LLLL')}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Source
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.source}
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col mb-1 items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Rights
+                           </div>
+                           <div className="block break-all text-sm text-slate-800">
+                              {item.rights}
+                           </div>
+                        </div>
+
+                        {/* file pdf download*/}
+                        <div className="flex flex-col mt-1 mb-1 lg:flex-row items-start">
+                           <div className="text-lg lg:w-2/12 min-w-fit">
+                              Document
+                           </div>
+                           <button
+                              onClick={() => item.file_pdf && onClickFileDownload(item.file_pdf, item.file_pdf.split("/").slice(-1)[0])}
+                              className={(item.file_pdf ? "text-green-700 bg-green-50 rounded-full " : "text-red-700 bg-red-100 rounded-full ") + "flex px-2 py-1 cursor-pointer break-all text-sm text-slate-800"}>
+                              {item.file_pdf ? item.file_pdf.split("/").slice(-1)[0] : "No File!"}
+                              <div className="ml-3">
+                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                 </svg>
+                              </div>
+                           </button>
+                        </div>
                      </div>
                   </div>
                ))}
