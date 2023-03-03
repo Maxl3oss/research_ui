@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
    return (
-      <aside className="bg-dark text-white w-2/12 min-w-[100px] min-h-min md:flex md:flex-col hidden pb-0">
+      <aside className="bg-dark text-white w-2/12 min-w-[100px] min-h-min lg:flex lg:flex-col hidden pb-0">
          <Link className="mt-16 md:hover:text-blue-600" to="/backend">
             <div className="flex justify-center lg:justify-start lg:ml-20 items-center ">
                <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >

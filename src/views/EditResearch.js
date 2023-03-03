@@ -26,11 +26,17 @@ const EditResearch = () => {
       description: ""
    });
    const [isSuccess, setIsSuccess] = useState(false);
+   const [rows, setRows] = useState(1);
    const [researchFiles, setResearchFiles] = useState({
       pdf_name: null,
       image: null,
       pdf: null
    });
+
+   // text area
+   const handleChange = () => {
+      setRows(research.description.split("\n").length);
+   };
 
    const handleImage = (e) => {
       let file_image = e.target.files[0];
@@ -127,25 +133,28 @@ const EditResearch = () => {
          // console.log(...formData);
          setLoading(true);
          try {
-            axios({
-               url: "research/update",
-               headers: {
-                  Authorization: localStorage.getItem('token').split(/["]/g).join(""),
-               },
-               method: "post",
-               data: formData
-            }).then((res) => {
-               // console.log(res);
-               setLoading(false);
-               Swal.fire({
-                  position: 'center',
-                  icon: 'success',
-                  text: 'Save your research.',
-                  showConfirmButton: false,
-                  timer: 1000
-               });
-               navigate("/profile");
-            })
+            const updateResearch = async () => {
+               await axios({
+                  url: "research/update",
+                  headers: {
+                     Authorization: localStorage.getItem('token').split(/["]/g).join(""),
+                  },
+                  method: "post",
+                  data: formData
+               }).then((res) => {
+                  // console.log(res);
+                  setLoading(false);
+                  Swal.fire({
+                     position: 'center',
+                     icon: 'success',
+                     text: 'Save your research.',
+                     showConfirmButton: false,
+                     timer: 1000
+                  });
+                  navigate("/backend/research");
+               })
+            }
+            updateResearch();
          } catch (err) {
             setLoading(false);
             // console.log(err.response);
@@ -241,6 +250,9 @@ const EditResearch = () => {
 
    useEffect(() => {
       setErrMsg("");
+      if (research) {
+         setRows(research.description.split("\n").length);
+      }
    }, [researchFiles, research]);
 
    return (
@@ -326,13 +338,18 @@ const EditResearch = () => {
                         Description
                      </div>
                      <textarea
-                        onChange={e => setResearch(current => {
-                           return {
-                              ...current, description: e.target.value
-                           }
-                        })}
+                        onChange={(e) => {
+                           handleChange();
+                           setResearch(current => {
+                              return {
+                                 ...current, description: e.target.value
+                              }
+                           });
+                        }}
+                        rows={rows}
                         value={research.description}
-                        id="comment" rows="4" className="w-full p-2 text-sm border-solid border rounded" required></textarea>
+                        id="comment" className="w-full p-2 text-sm border-solid border rounded min-h-fit overflow-hidden" required>
+                     </textarea>
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">

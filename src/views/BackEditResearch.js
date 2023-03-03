@@ -11,6 +11,7 @@ const BackEditResearch = () => {
    const [loading, setLoading] = useState(false);
    const [imageSrc, setImageSrc] = useState("");
    const [errMsg, setErrMsg] = useState("");
+   const [rows, setRows] = useState(1);
    const [research, setResearch] = useState({
       research_id: "",
       user_id: "",
@@ -127,25 +128,28 @@ const BackEditResearch = () => {
          // console.log(...formData);
          setLoading(true);
          try {
-            axios({
-               url: "research/update",
-               headers: {
-                  Authorization: localStorage.getItem('token').split(/["]/g).join(""),
-               },
-               method: "post",
-               data: formData
-            }).then((res) => {
-               // console.log(res);
-               setLoading(false);
-               Swal.fire({
-                  position: 'center',
-                  icon: 'success',
-                  text: 'Save your research.',
-                  showConfirmButton: false,
-                  timer: 1000
-               });
-               navigate("/backend/research");
-            })
+            const updateResearch = async () => {
+               await axios({
+                  url: "research/update",
+                  headers: {
+                     Authorization: localStorage.getItem('token').split(/["]/g).join(""),
+                  },
+                  method: "post",
+                  data: formData
+               }).then((res) => {
+                  // console.log(res);
+                  setLoading(false);
+                  Swal.fire({
+                     position: 'center',
+                     icon: 'success',
+                     text: 'Save your research.',
+                     showConfirmButton: false,
+                     timer: 1000
+                  });
+                  navigate("/backend/research");
+               })
+            }
+            updateResearch();
          } catch (err) {
             setLoading(false);
             // console.log(err.response);
@@ -241,7 +245,15 @@ const BackEditResearch = () => {
 
    useEffect(() => {
       setErrMsg("");
+      if (research) {
+         setRows(research.description.split("\n").length);
+      }
    }, [researchFiles, research]);
+
+   // text area
+   const handleChange = () => {
+      setRows(research.description.split("\n").length);
+   };
 
    useEffect(() => {
       window.scrollTo(0, 0);
@@ -250,12 +262,12 @@ const BackEditResearch = () => {
    return (
       <Layout>
          <div className="min-h-screen md:pt-5 md:px-5  flex justify-center items-start">
-            <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full  shadow-md  rounded-xl">
+            <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full  shadow-md  rounded-xl bg-neutral-900">
                <div className="flex md:justify-start justify-center text-3xl font-light mb-5">Edit Research</div>
                <form>
-                  <div className="flex justify-center items-center">
+                  <div className="mb-3 flex justify-center items-center">
                      <div className="flex items-center justify-center w-full">
-                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-dark">
+                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-neutral-700 border-dashed rounded-lg cursor-pointer bg-dark">
                            <div className={`${researchFiles.image ? "hidden" : "flex flex-col items-center justify-center pt-5 pb-6"}`}>
                               <svg aria-hidden="true" className="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                               <p className="mb-2 text-sm text-gray-500 "><span className="font-semibold">Click to upload</span> or drag and drop</p>
@@ -268,7 +280,6 @@ const BackEditResearch = () => {
                         </label>
                      </div>
                   </div>
-                  <hr className="mb-3" />
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
                      <div className="text-lg md:w-2/12 ">
@@ -281,7 +292,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.title}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" required />
+                        type="text" className="input-edr" required />
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -295,7 +306,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.title_alternative}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" required />
+                        type="text" className="input-edr" required />
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -309,7 +320,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.creator}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" required />
+                        type="text" className="input-edr" required />
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -323,7 +334,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.subject}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" />
+                        type="text" className="input-edr" />
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -331,13 +342,18 @@ const BackEditResearch = () => {
                         Description
                      </div>
                      <textarea
-                        onChange={e => setResearch(current => {
-                           return {
-                              ...current, description: e.target.value
-                           }
-                        })}
+                        onChange={(e) => {
+                           handleChange();
+                           setResearch(current => {
+                              return {
+                                 ...current, description: e.target.value
+                              }
+                           })
+                        }}
+                        rows={rows}
                         value={research.description}
-                        id="comment" rows="4" className="w-full bg-dark p-2 text-sm border-solid border rounded" required></textarea>
+                        id="comment" className="input-edr min-h-fit overflow-hidden" required>
+                     </textarea>
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -351,7 +367,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.publisher}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" />
+                        type="text" className="input-edr" />
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -365,7 +381,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.contributor}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" />
+                        type="text" className="input-edr" />
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -379,7 +395,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.source}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" />
+                        type="text" className="input-edr" />
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">
@@ -393,7 +409,7 @@ const BackEditResearch = () => {
                            }
                         })}
                         value={research.rights}
-                        type="text" className="w-full bg-dark p-2 text-sm border-solid border rounded" />
+                        type="text" className="input-edr" />
                   </div>
 
                   {/* file pdf download*/}

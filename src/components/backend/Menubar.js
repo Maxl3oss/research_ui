@@ -6,7 +6,7 @@ export default function Menubar() {
    localStorage.getItem("user") ? { user_email } = JSON.parse(localStorage.getItem("user")) : { user_email } = false;
    const navigate = useNavigate();
    return (
-      <menu className="fixed inset-x-0 bottom-0 bg-dark border-t-2 md:hidden px-2 sm:px-4 py-2.5 rounded">
+      <menu className="fixed inset-x-0 bottom-0 bg-dark border-t-2 lg:hidden px-2 sm:px-4 py-2.5 rounded">
          {user_email ? (
             <div className="container bg-dark  flex flex-wrap justify-around items-center mx-auto">
                <Link to="/backend" className="h-8 w-8">

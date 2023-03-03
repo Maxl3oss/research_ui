@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from "layouts/FrontendLayout";
 import axios from "services/axios";
 import Swal from "sweetalert2";
@@ -16,6 +16,7 @@ const AddResearch = () => {
    const [errMsg, setErrMsg] = useState("");
    const [isSuccess, setIsSuccess] = useState(false);
    const [loading, setLoading] = useState(false);
+   const [rows, setRows] = useState(3);
    const [research, setResearch] = useState({
       user_id: null,
       title: null,
@@ -27,12 +28,16 @@ const AddResearch = () => {
       date: localISOTime.slice(0, 19).replace('T', ' '),
       source: "-",
       rights: null,
-      description: null
+      description: ""
    });
    const [researchFiles, setResearchFiles] = useState({
       image: null,
       pdf: null
    });
+   // text area
+   const handleChange = () => {
+      setRows(research.description.split("\n").length);
+   };
 
    const handleExtractImage = async () => {
       const fileReader = new FileReader();
@@ -142,6 +147,50 @@ const AddResearch = () => {
       validateForm();
    }
 
+   const UpResearch = async (formData) => {
+      setLoading(true);
+      await axios({
+         url: "research/post",
+         headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
+         method: "post",
+         data: formData
+      }).then(() => {
+         // console.log(res);
+         setLoading(false);
+         Swal.fire({
+            position: 'center',
+            icon: 'success',
+            text: 'Save your research.',
+            showConfirmButton: false,
+            timer: 1000
+         });
+         navigate("/profile");
+      }).catch((err) => {
+         setLoading(false);
+         if (err.response?.status === 403) {
+            Swal.fire({
+               icon: 'warning',
+               text: 'Token time out!',
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
+               navigate("/signIn");
+            });
+         } else if (err.response?.status === 401) {
+            Swal.fire({
+               icon: 'warning',
+               text: 'Token not found',
+               confirmButtonColor: "rgb(29 78 216)",
+            }).then(() => {
+               localStorage.removeItem("user");
+               localStorage.removeItem("token");
+               navigate("/signIn");
+            });
+         }
+      })
+   }
+
    useEffect(() => {
       if (isSuccess) {
          const formData = new FormData();
@@ -149,49 +198,9 @@ const AddResearch = () => {
          formData.append("images", researchFiles.image);
          formData.append("info", JSON.stringify(research));
          // console.log(...formData);
-         setLoading(true);
-         axios({
-            url: "research/post",
-            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join(""), },
-            method: "post",
-            data: formData
-         }).then(() => {
-            // console.log(res);
-            setLoading(false);
-            Swal.fire({
-               position: 'center',
-               icon: 'success',
-               text: 'Save your research.',
-               showConfirmButton: false,
-               timer: 1000
-            });
-            navigate("/profile");
-         }).catch((err) => {
-            setLoading(false);
-            if (err.response?.status === 403) {
-               Swal.fire({
-                  icon: 'warning',
-                  text: 'Token time out!',
-                  confirmButtonColor: "rgb(29 78 216)",
-               }).then(() => {
-                  localStorage.removeItem("user");
-                  localStorage.removeItem("token");
-                  navigate("/signIn");
-               });
-            } else if (err.response?.status === 401) {
-               Swal.fire({
-                  icon: 'warning',
-                  text: 'Token not found',
-                  confirmButtonColor: "rgb(29 78 216)",
-               }).then(() => {
-                  localStorage.removeItem("user");
-                  localStorage.removeItem("token");
-                  navigate("/signIn");
-               });
-            }
-         })
+         UpResearch(formData);
       }
-   }, [isSuccess, navigate, research, researchFiles]);
+   }, [isSuccess]);
 
    useEffect(() => {
       if (JSON.parse(localStorage.getItem("user"))) {
@@ -299,12 +308,18 @@ const AddResearch = () => {
                         Description
                      </div>
                      <textarea
-                        onChange={e => setResearch(current => {
-                           return {
-                              ...current, description: e.target.value
-                           }
-                        })}
-                        id="comment" rows="4" className="w-full p-2 text-sm border-solid border rounded" required></textarea>
+                        onChange={(e) => {
+                           handleChange();
+                           setResearch(current => {
+                              return {
+                                 ...current, description: e.target.value
+                              }
+                           });
+                        }}
+                        rows={rows}
+                        value={research.description}
+                        id="comment" className="w-full p-2 text-sm border-solid border rounded min-h-fit overflow-hidden" required>
+                     </textarea>
                   </div>
 
                   <div className="flex flex-col mb-1 md:flex-row items-start">

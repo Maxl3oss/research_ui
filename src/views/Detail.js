@@ -19,10 +19,9 @@ const Detail = () => {
       try {
          setId(location.state.id);
       } catch (err) {
-         console.log(err);
          navigate("/");
       }
-   }, [navigate, location.state.id]);
+   }, [navigate, location]);
 
    useEffect(() => {
       if (id) {
@@ -99,7 +98,7 @@ const Detail = () => {
 
    return (
       <Layout>
-         <div className="min-h-screen md:pt-5 md:px-5 flex justify-center items-start">
+         <div className="min-h-screen md:pt-5 md:pr-5 flex justify-center items-start">
             <div className="mt-1 mb-14 md:mb-10 p-3 md:p-8 w-full bg-white drop-shadow-xl  rounded-xl">
                {items.map((item, key) => (
                   <div key={key} className="flex">
@@ -110,7 +109,7 @@ const Detail = () => {
 
                      <div className="lg:w-4/6 w-full">
 
-                        <div className="lg:hidden block">
+                        <div className="lg:hidden lg:mb-0 mb-5 flex justify-center items-center">
                            <img alt="" className="border " src={item.image ? item.image : noImage} />
                         </div>
 

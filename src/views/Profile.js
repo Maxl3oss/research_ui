@@ -66,32 +66,35 @@ const Profile = () => {
 
    useEffect(() => {
       if (errMsg === "" && isSuccess) {
-         axios({
-            method: "post",
-            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
-            url: "/users/edit",
-            data: userInfo
-         }).then(() => {
-            Swal.fire({
-               icon: 'success',
-               text: 'Successfully',
-               showConfirmButton: false,
-               timer: 1000
-            }).then(async () => {
-               await axios({
-                  method: "post",
-                  headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
-                  url: "/users/getByEmail",
-                  data: { user_email: userInfo.user_email }
-               }).then((res) => {
-                  localStorage.setItem('user', JSON.stringify(res.data.data[0]));
-                  setShowEdit(false);
-               })
+         const UpdateUser = async () => {
+            await axios({
+               method: "post",
+               headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
+               url: "/users/edit",
+               data: userInfo
+            }).then(() => {
+               Swal.fire({
+                  icon: 'success',
+                  text: 'Successfully',
+                  showConfirmButton: false,
+                  timer: 1000
+               }).then(async () => {
+                  await axios({
+                     method: "post",
+                     headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
+                     url: "/users/getByEmail",
+                     data: { user_email: userInfo.user_email }
+                  }).then((res) => {
+                     localStorage.setItem('user', JSON.stringify(res.data.data[0]));
+                     setShowEdit(false);
+                  })
+               });
+               setIsSuccess(false);
+            }).catch((err) => {
+               console.log(err);
             });
-            setIsSuccess(false);
-         }).catch((err) => {
-            console.log(err);
-         });
+         }
+         UpdateUser();
       }
    }, [errMsg, isSuccess, userInfo]);
 
@@ -280,7 +283,6 @@ const Profile = () => {
                </div>
             </div>
          </div>
-
       </>
    )
 }

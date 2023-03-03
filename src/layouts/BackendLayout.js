@@ -9,7 +9,7 @@ const BackendLayout = ({ children }) => {
    return (
       <div className="flex flex-row min-h-screen bg-dark">
          <Sidebar />
-         <div className="flex flex-col md:px-0 px-5 w-full bg-dark">
+         <div className="flex flex-col md:px-0 px-2 w-full bg-dark">
             <Nav />
             {children}
          </div>

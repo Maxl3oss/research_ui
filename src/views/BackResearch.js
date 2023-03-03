@@ -199,7 +199,7 @@ const BackResearch = () => {
    return (
       <Layout>
          <div className="px-6 flex md:justify-start justify-center text-3xl font-light mb-5">Research</div>
-         <div className="overflow-x-auto relative shadow-md sm:rounded-lg p-6 pt-0">
+         <div className="overflow-x-auto relative shadow-md sm:rounded-lg sm:p-6 pt-0">
             {/* loading */}
             {loading && (
                <div className="flex mt-5 items-center justify-center text-center ">
@@ -225,80 +225,133 @@ const BackResearch = () => {
                </div>
             )}
             {researchInfo && (
-               <table className="w-full text-left table-auto">
-                  <thead>
-                     <tr className="text-gray-400">
-                        <th className="p-5">NO.</th>
-                        <th className="p-5">RESEARCH</th>
-                        <th className="p-5">DATE</th>
-                        <th className="p-5">USER</th>
-                        <th className="p-5">STATUS</th>
-                        <th className="p-5">ACTIONS</th>
-                     </tr>
-                  </thead>
-                  <tbody className="md:text-base text-sm">
+               <>
+                  <table className="w-full md:table hidden text-left table-auto">
+                     <thead>
+                        <tr className="text-gray-400">
+                           <th className="p-5">NO.</th>
+                           <th className="p-5">RESEARCH</th>
+                           <th className="p-5">DATE</th>
+                           <th className="p-5">USER</th>
+                           <th className="p-5">STATUS</th>
+                           <th className="p-5">ACTIONS</th>
+                        </tr>
+                     </thead>
+                     <tbody className="md:text-base text-sm">
+                        {researchInfo.map((item, key) => (
+                           <tr className="border border-neutral-700" key={key}>
+                              <td>
+                                 <div className="flex items-center p-5">
+                                    <span className="ml-1 text-blue-500 font-bold">{item.id}</span>
+                                 </div>
+                              </td>
+                              <td>
+                                 <div className="flex items-center p-5">
+                                    <span className="ml-1 break-all">
+                                       {item.title.length > 50
+                                          ? `${item.title.substring(0, 50)} ...` : item.title
+                                       }
+                                    </span>
+                                 </div>
+                              </td>
+                              <td>
+                                 {/* {moment(item.date, "YYYYMMDD HH:mm:ss").fromNow()} */}
+                                 <div className="p-5 text-gray-400">
+                                    {moment(item.date).format("L")}
+                                 </div>
+                              </td>
+                              <td>
+                                 <div className="flex items-center p-5 whitespace-nowrap">
+                                    <span className="ml-1">{item.user_fname + " " + item.user_lname}</span>
+                                 </div>
+                              </td>
+                              <td className="p-5 whitespace-nowrap">
+                                 <div onClick={() => onClickIsVerified(item.id, item.isVerified)}
+                                    className={`${item.isVerified === 1 ? "text-green-300 bg-green-900" : "text-red-300 bg-red-900"} bg-opacity-50 cursor-pointer rounded-full w-fit px-2`}>
+                                    {item.isVerified === 1 ? "Verified" : "Not Verified"}
+                                 </div>
+                              </td>
+                              <td className="p-5 whitespace-nowrap">
+                                 <div className="flex justify-between md:justify-start">
+                                    {/* detail */}
+                                    <button onClick={() => onClickDetail(item.id)}>
+                                       <svg className="w-6 h-6 cursor-pointer text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                       </svg>
+                                    </button>
+                                    <div className="ml-1"></div>
+                                    {/* edit */}
+                                    <button onClick={() => handleEdit(item.id)}>
+                                       <svg className="w-5 h-5 cursor-pointer " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                       </svg>
+                                    </button>
+                                    {/* delete */}
+                                    <div className="ml-1"></div>
+                                    <button onClick={() => handleDelete(item.id)}>
+                                       <svg className="w-5 h-5 cursor-pointer text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                       </svg>
+                                    </button>
+                                 </div>
+                              </td>
+                           </tr>
+                        ))}
+                     </tbody>
+                  </table>
+                  {/* mobile view */}
+                  <div className="grid grid-cols-1 gap-4 md:hidden">
                      {researchInfo.map((item, key) => (
-                        <tr className="border border-gray-400" key={key}>
-                           <td>
-                              <div className="flex items-center p-5">
-                                 <span className="ml-1">{item.id}</span>
+                        <div key={key} className="bg-neutral-900 p-4 rounded-lg shadow">
+                           <div className="flex items-center space-x-2 text-sm">
+                              <div>
+                                 <a href="#" className="text-blue-500 font-bold hover:underline">
+                                    {item.id}
+                                 </a>
                               </div>
-                           </td>
-                           <td>
-                              <div className="flex items-center p-5">
-                                 <span className="ml-1 break-all">
-                                    {item.title.length > 50
-                                       ? `${item.title.substring(0, 50)} ...` : item.title
-                                    }
-                                 </span>
-                              </div>
-                           </td>
-                           <td>
-                              {/* {moment(item.date, "YYYYMMDD HH:mm:ss").fromNow()} */}
-                              <div className="p-5">
+                              <div className="text-gray-400">
                                  {moment(item.date).format("L")}
                               </div>
-                           </td>
-                           <td>
-                              <div className="flex items-center p-5 whitespace-nowrap">
-                                 <span className="ml-1">{item.user_fname + " " + item.user_lname}</span>
-                              </div>
-                           </td>
-                           <td className="p-5 whitespace-nowrap">
                               <div onClick={() => onClickIsVerified(item.id, item.isVerified)}
-                                 className={`${item.isVerified === 1 ? "text-green-50 bg-green-600" : "text-red-50 bg-red-600"} cursor-pointer rounded-full w-fit px-2`}>
+                                 className={`${item.isVerified === 1 ? "text-green-300 bg-green-900" : "text-red-300 bg-red-900"} bg-opacity-50 cursor-pointer rounded-full w-fit px-2`}>
                                  {item.isVerified === 1 ? "Verified" : "Not Verified"}
                               </div>
-                           </td>
-                           <td className="p-5 whitespace-nowrap">
-                              <div className="flex justify-between md:justify-start">
-                                 {/* detail */}
-                                 <button onClick={() => onClickDetail(item.id)}>
-                                    <svg className="w-6 h-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                 </button>
-                                 <div className="ml-1"></div>
-                                 {/* edit */}
-                                 <button onClick={() => handleEdit(item.id)}>
-                                    <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                                    </svg>
-                                 </button>
-                                 {/* delete */}
-                                 <div className="ml-1"></div>
-                                 <button onClick={() => handleDelete(item.id)}>
-                                    <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                    </svg>
-                                 </button>
-                              </div>
-                           </td>
-                        </tr>
+                           </div>
+
+                           <div className="flex items-center my-5">
+                              <span className="break-all text-sm font-medium">
+                                 {item.title}
+                              </span>
+                           </div>
+
+                           <div className="flex justify-end md:justify-start">
+                              {/* detail */}
+                              <button onClick={() => onClickDetail(item.id)}>
+                                 <svg className="w-6 h-6 cursor-pointer text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                 </svg>
+                              </button>
+                              <div className="ml-1"></div>
+                              {/* edit */}
+                              <button onClick={() => handleEdit(item.id)}>
+                                 <svg className="w-5 h-5 cursor-pointer text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                 </svg>
+                              </button>
+                              {/* delete */}
+                              <div className="ml-1"></div>
+                              <button onClick={() => handleDelete(item.id)}>
+                                 <svg className="w-5 h-5 cursor-pointer text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                 </svg>
+                              </button>
+                           </div>
+                        </div>
                      ))}
-                  </tbody>
-               </table>
+                  </div>
+               </>
             )}
          </div>
          {totalPage && (

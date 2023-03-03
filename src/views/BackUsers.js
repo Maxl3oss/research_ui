@@ -191,26 +191,29 @@ const BackUsers = () => {
 
    useEffect(() => {
       if (errMsg === "" && isSuccess) {
-         axios({
-            method: "post",
-            headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
-            url: "/backend/editUser",
-            data: userInfo
-         }).then(() => {
-            Swal.fire({
-               icon: 'success',
-               text: 'Successfully',
-               showConfirmButton: false,
-               timer: 1000
-            }).then((res) => {
-               // console.log(res);
-               setShowEdit(false);
-               getUsers();
+         const EditUser = async () => {
+            await axios({
+               method: "post",
+               headers: { Authorization: localStorage.getItem('token').split(/["]/g).join("") },
+               url: "/backend/editUser",
+               data: userInfo
+            }).then(() => {
+               Swal.fire({
+                  icon: 'success',
+                  text: 'Successfully',
+                  showConfirmButton: false,
+                  timer: 1000
+               }).then((res) => {
+                  // console.log(res);
+                  setShowEdit(false);
+                  getUsers();
+               });
+               setIsSuccess(false);
+            }).catch((err) => {
+               console.log(err);
             });
-            setIsSuccess(false);
-         }).catch((err) => {
-            console.log(err);
-         });
+         }
+         EditUser();
       }
    }, [errMsg, isSuccess, userInfo]);
 
@@ -286,7 +289,7 @@ const BackUsers = () => {
       <>
          <Layout>
             <div className="md:px-6 flex md:justify-start justify-center text-3xl font-light mb-5">User & Admin</div>
-            <div className="overflow-x-auto relative shadow-md sm:rounded-lg pt-0 lg:pt-0 lg:p-6">
+            <div className="overflow-x-auto relative shadow-md sm:rounded-lg sm:p-6 pt-0">
                {/* loading */}
                {loading && (
                   <div className="flex mt-5 items-center justify-center text-center">
@@ -312,73 +315,115 @@ const BackUsers = () => {
                   </div>
                )}
                {usersInfo && (
-                  <table className="w-full text-left">
-                     <thead>
-                        <tr className="text-gray-400">
-                           <th className="p-5">NO.</th>
-                           <th className="p-5">RESEARCH</th>
-                           <th className="p-5">USER</th>
-                           <th className="p-5">ROLE</th>
-                           <th className="p-5">STATUS</th>
-                           <th className="p-5">ACTIONS</th>
-                        </tr>
-                     </thead>
-                     <tbody className="md:text-base text-sm">
-                        {/* {console.log(userInfo)} */}
+                  <>
+                     <table className="w-full md:table hidden text-left">
+                        <thead>
+                           <tr className="text-gray-400">
+                              <th className="p-5">NO.</th>
+                              <th className="p-5">RESEARCH</th>
+                              <th className="p-5">USER</th>
+                              <th className="p-5">ROLE</th>
+                              <th className="p-5">STATUS</th>
+                              <th className="p-5">ACTIONS</th>
+                           </tr>
+                        </thead>
+                        <tbody className="md:text-base text-sm">
+                           {/* {console.log(userInfo)} */}
+                           {usersInfo.map((item, key) => (
+                              <tr className="border border-neutral-700" key={key}>
+                                 <td>
+                                    <div className="flex items-center p-5">
+                                       <span className="ml-1 text-blue-500 font-bold">{item.user_id}</span>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <div className="flex items-center p-5">
+                                       <span className="ml-1 break-all">
+                                          {item.user_email.length > 50
+                                             ? `${item.user_email.substring(0, 50)} ...` : item.user_email
+                                          }
+                                       </span>
+                                    </div>
+                                 </td>
+                                 <td>
+                                    <div className="flex items-center p-5 whitespace-nowrap">
+                                       <span className="ml-1">{item.user_fname + " " + item.user_lname}</span>
+                                    </div>
+                                 </td>
+                                 <td className="p-5 whitespace-nowrap">
+                                    <div className={`${item.role_id === 2 ? "text-blue-500 " : "text-amber-500 "}  cursor-pointer rounded-full w-fit px-2`}>
+                                       {item.role_id === 1 ? "admin" : "user"}
+                                    </div>
+                                 </td>
+                                 <td className="p-5 whitespace-nowrap">
+                                    <div onClick={() => onClickIsVerified(item.user_id, item.isVerified)}
+                                       className={`${item.isVerified === 1 ? "text-green-300 bg-green-900" : "text-red-300 bg-red-900"} bg-opacity-50 cursor-pointer rounded-full w-fit px-2`}>
+                                       {item.isVerified === 1 ? "Verified" : "Not Verified"}
+                                    </div>
+                                 </td>
+                                 <td className="p-5 whitespace-nowrap">
+                                    <div className="flex justify-between md:justify-start">
+                                       <div className="ml-1"></div>
+                                       {/* edit */}
+                                       <button onClick={() => handleEdit(item.user_id)}>
+                                          <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                          </svg>
+                                       </button>
+                                       {/* delete */}
+                                       <div className="ml-1"></div>
+                                       <button onClick={() => handleDelete(item.user_id)}>
+                                          <svg className="w-5 h-5 cursor-pointer text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                          </svg>
+                                       </button>
+                                    </div>
+                                 </td>
+                              </tr>
+                           ))}
+                        </tbody>
+                     </table>
+                     {/* mobile view */}
+                     <div className="grid grid-cols-1 gap-4 md:hidden">
                         {usersInfo.map((item, key) => (
-                           <tr className="border border-gray-400" key={key}>
-                              <td>
-                                 <div className="flex items-center p-5">
-                                    <span className="ml-1">{item.user_id}</span>
+                           <div key={key} className="bg-neutral-900 p-4 rounded-lg shadow">
+                              <div className="flex items-center space-x-2 text-sm">
+                                 <div>
+                                    <a href="#" className="text-blue-500 font-bold hover:underline">
+                                       {item.user_id}
+                                    </a>
                                  </div>
-                              </td>
-                              <td>
-                                 <div className="flex items-center p-5">
-                                    <span className="ml-1 break-all">
-                                       {item.user_email.length > 50
-                                          ? `${item.user_email.substring(0, 50)} ...` : item.user_email
-                                       }
-                                    </span>
+                                 <div className={`${item.role_id === 2 ? "text-blue-500" : "text-amber-500"}  cursor-pointer rounded-full w-fit px-2`}>
+                                    {item.role_id === 1 ? "admin" : "user"}
                                  </div>
-                              </td>
-                              <td>
-                                 <div className="flex items-center p-5 whitespace-nowrap">
-                                    <span className="ml-1">{item.user_fname + " " + item.user_lname}</span>
-                                 </div>
-                              </td>
-                              <td className="p-5 whitespace-nowrap">
-                                 <div className={`${item.role_id === 2 ? "text-blue-600 bg-blue-100" : "text-red-600 bg-red-100"} cursor-pointer rounded-full w-fit px-2`}>
-                                    {item.role_id === 1 ? "Admin" : "User"}
-                                 </div>
-                              </td>
-                              <td className="p-5 whitespace-nowrap">
                                  <div onClick={() => onClickIsVerified(item.user_id, item.isVerified)}
-                                    className={`${item.isVerified === 1 ? "text-green-50 bg-green-600" : "text-red-50 bg-red-600"} cursor-pointer rounded-full w-fit px-2`}>
+                                    className={`${item.isVerified === 1 ? "text-green-300 bg-green-900" : "text-red-300 bg-red-900"} bg-opacity-50 cursor-pointer rounded-full w-fit px-2`}>
                                     {item.isVerified === 1 ? "Verified" : "Not Verified"}
                                  </div>
-                              </td>
-                              <td className="p-5 whitespace-nowrap">
-                                 <div className="flex justify-between md:justify-start">
-                                    <div className="ml-1"></div>
-                                    {/* edit */}
-                                    <button onClick={() => handleEdit(item.user_id)}>
-                                       <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                                       </svg>
-                                    </button>
-                                    {/* delete */}
-                                    <div className="ml-1"></div>
-                                    <button onClick={() => handleDelete(item.user_id)}>
-                                       <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                                          <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                       </svg>
-                                    </button>
-                                 </div>
-                              </td>
-                           </tr>
+                              </div>
+
+                              <div className="flex items-center my-5 whitespace-nowrap">
+                                 <span>{item.user_fname + " " + item.user_lname}</span>
+                              </div>
+                              <div className="flex justify-end md:justify-start">
+                                 {/* edit */}
+                                 <button onClick={() => handleEdit(item.user_id)}>
+                                    <svg className="w-5 h-5 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                    </svg>
+                                 </button>
+                                 {/* delete */}
+                                 <div className="ml-1"></div>
+                                 <button onClick={() => handleDelete(item.user_id)}>
+                                    <svg className="w-5 h-5 cursor-pointer text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                       <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+                                 </button>
+                              </div>
+                           </div>
                         ))}
-                     </tbody>
-                  </table>
+                     </div>
+                  </>
                )}
             </div>
             {totalPage && (
