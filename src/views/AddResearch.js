@@ -39,13 +39,16 @@ const AddResearch = () => {
       setRows(research.description.split("\n").length);
    };
 
-   const handleExtractImage = async () => {
+   const handleExtractPDF = async () => {
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(researchFiles.pdf);
       fileReader.onload = async () => {
          const pdfData = new Uint8Array(fileReader.result);
          const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
          const page = await pdf.getPage(1);
+         // get text
+         handleExtractText(pdf);
+
          const viewport = page.getViewport({ scale: 1 });
          const canvas = document.createElement('canvas');
          canvas.style.display = 'none';
@@ -68,6 +71,28 @@ const AddResearch = () => {
 
       };
    };
+
+   const handleExtractText = async (pdf) => {
+      // const textContent = await page.getTextContent();
+      // const pageText = textContent.items.map(item => item.str).join(' ');
+      // console.log(pageText);
+      // // const mt_ct = pageText.match(/โดย\s+(.*?)\s+ระดับชั้น/g).toString().split(" ");
+      // const mt_ct = pageText.match(/โดย.*?\ระดับชั้น/g);
+      // // mt_ct.shift();
+      // // mt_ct.pop();
+      // console.log(mt_ct.join(" "));
+      const metadata = await pdf.getMetadata();
+      const title = metadata.info.Title;
+      const subject = metadata.info.Subject;
+      const author = metadata.info.Author;
+      const producer = metadata.info.Producer;
+
+      console.log('Title:', title);
+      console.log('Subject:', subject);
+      console.log('Author:', author);
+      console.log('Producer:', producer);
+
+   }
 
    const handleImage = (e) => {
       let file_image = e.target.files[0];
@@ -200,6 +225,7 @@ const AddResearch = () => {
          // console.log(...formData);
          UpResearch(formData);
       }
+      // eslint-disable-next-line
    }, [isSuccess]);
 
    useEffect(() => {
@@ -219,11 +245,15 @@ const AddResearch = () => {
       // console.log(new Date().toISOString().slice(0, 19).replace('T', ' '));
       // console.log(researchFiles.image);
       // console.log(imageSrc);
-      if (researchFiles.pdf) {
-         handleExtractImage();
-      }
       setErrMsg("");
    }, [researchFiles, research]);
+
+   useEffect(() => {
+      if (researchFiles.pdf) {
+         handleExtractPDF();
+      }
+      // eslint-disable-next-line
+   }, [researchFiles.pdf])
 
    useEffect(() => {
       window.scrollTo(0, 0);

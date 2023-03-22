@@ -194,7 +194,7 @@ const MyResearch = () => {
                               </div>
                               <div className="md:flex mt-4 mb-6 ">
                                  <div className="md:w-2/6 flex justify-center items-center">
-                                    <img alt="" className="object-cover max-h-56 w-full" src={item.image ? item.image : noImage} />
+                                    <img alt="" className="object-contain max-h-56 w-full" src={item.image ? item.image : noImage} />
                                  </div>
 
                                  <div className="md:ml-3 mt-5 md:mt-0 w-full">

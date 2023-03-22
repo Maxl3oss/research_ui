@@ -204,7 +204,7 @@ const BackDetail = () => {
                            </div>
                            <button
                               onClick={() => item.file_pdf && onClickFileDownload(item.file_pdf, item.file_pdf.split("/").slice(-1)[0])}
-                              className={(item.file_pdf ? "text-green-300 bg-green-900 rounded-full " : "text-red-300 bg-red-900 rounded-full ") + "bg-opacity-50 flex px-2 py-1 cursor-pointer break-all text-sm text-slate-800"}>
+                              className={(item.file_pdf ? "text-green-300 bg-green-900 rounded-full " : "text-red-300 bg-red-900 rounded-full ") + "bg-opacity-50 flex px-2 py-1 cursor-pointer break-all text-sm "}>
                               {item.file_pdf ? item.file_pdf.split("/").slice(-1)[0] : "No File!"}
                               <div className="ml-3">
                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
