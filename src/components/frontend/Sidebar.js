@@ -6,7 +6,7 @@ const Sidebar = () => {
    const context = useContext(AuthContext);
 
    return (
-      <aside className="inset-y-20 p-5 h-96 sticky w-2/12 min-h-min md:inline hidden pb-0">
+      <aside className="inset-y-20 p-5 pr-0 h-96 sticky w-2/12 min-h-min md:inline hidden pb-0">
          <Link className="md:hover:text-blue-600" to="/">
             <div className="flex justify-center lg:justify-start lg:ml-20 items-center ">
                <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >

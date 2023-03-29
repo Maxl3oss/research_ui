@@ -389,7 +389,7 @@ const BackUsers = () => {
                            <div key={key} className="bg-neutral-900 p-4 rounded-lg shadow">
                               <div className="flex items-center space-x-2 text-sm">
                                  <div>
-                                    <a href="#" className="text-blue-500 font-bold hover:underline">
+                                    <a href="" className="text-blue-500 font-bold hover:underline">
                                        {item.user_id}
                                     </a>
                                  </div>

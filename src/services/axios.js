@@ -1,6 +1,6 @@
 import axios from "axios";
 const BASE_URL = "https://curious-teal-suit.cyclic.app/api/";
-// const BASE_URL = "http://192.168.0.3:3000/api/";
+// const BASE_URL = "http://localhost:3000/api/";
 
 const authService = axios.create({
   baseURL: BASE_URL,
